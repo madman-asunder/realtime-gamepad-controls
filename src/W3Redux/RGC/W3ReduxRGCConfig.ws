@@ -13,7 +13,6 @@ enum ESprintStaminaUsage
 
 function RGCConfigIsImmersiveMotionEnabled() : bool
 {
-	//test
 	return (bool) theGame.GetInGameConfigWrapper().GetVarValue('w3ReduxRGC', 'virtual_w3ReduxRGCImmersiveMotion');
 }
 

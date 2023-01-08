@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-16"?>
 <UserConfig>
-
-    <Group id="w3ReduxRGC" displayName="Mods.gameplay.Config_RGC_ConfigName">
+	<Group id="w3ReduxRGC" displayName="Mods.gameplay.Config_RGC_ConfigName">
 		<PresetsArray>
 			<Preset id="0" displayName="Config_RGC_ConfigNameDefault">
 				<Entry varId="virtual_w3ReduxRGCInvAlwaysDisplay" value="true"/>
@@ -16,9 +15,9 @@
 				<Entry varId="w3ReduxRGCSprintStaminaUsage" value="2"/>
 			</Preset>
 		</PresetsArray>
-        <VisibleVars>
+		<VisibleVars>
 			<Var id="virtual_w3ReduxRGCInvAlwaysDisplay" displayName="Config_RGC_InvAlwaysDisplay" displayType="TOGGLE"/>
-            <Var id="virtual_w3ReduxRGCDefaultInventory" displayName="Config_RGC_DefaultInventory" displayType="OPTIONS" >
+			<Var id="virtual_w3ReduxRGCDefaultInventory" displayName="Config_RGC_DefaultInventory" displayType="OPTIONS" >
 				<OptionsArray>
 					<Option id="0" displayName="Config_RGC_DefaultItems">
 						<Entry varId="w3ReduxRGCDefaultInv" value="0"/>
@@ -42,7 +41,6 @@
 					</Option>
 				</OptionsArray>
 			</Var>
-        </VisibleVars>
-    </Group>
-
+		</VisibleVars>
+	</Group>
 </UserConfig>
