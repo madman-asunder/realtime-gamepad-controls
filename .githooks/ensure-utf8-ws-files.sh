@@ -14,10 +14,16 @@ for SOURCE_FILE in `find . -iname "*.ws"`; do
   if [ "$ENCODING" == "utf-16le" ]; then
     BAD_ENCODING=true
   fi
+  if [ "$ENCODING" == "utf-16be" ]; then
+    BAD_ENCODING=true
+  fi
+  if [ "$ENCODING" == "utf-16" ]; then
+    BAD_ENCODING=true
+  fi
 done
 
 if [ $BAD_ENCODING == true ]; then
-    echo "found ws files with wrong encoding. please run encode-src-utf8.sh. aborting commit..."
+    echo "found ws files with wrong encoding. please run scripts/encoding/encode-ws-utf8.sh. aborting commit..."
     exit 1
 fi
 
