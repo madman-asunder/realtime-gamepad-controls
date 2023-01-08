@@ -1,2 +1,1 @@
-*.ws encoding=utf8
-*.bash     text eol=lf
+*.ws text working-tree-encoding=UTF-16
