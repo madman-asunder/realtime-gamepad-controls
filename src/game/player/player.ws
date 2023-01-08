@@ -187,6 +187,8 @@ statemachine import abstract class CPlayer extends CActor
 	
 	
 	protected var photomodeManager : PhotomodeManager;
+
+	
 	
 	public var isAdaptiveBalance : bool;
 	default isAdaptiveBalance = false;
@@ -232,8 +234,10 @@ statemachine import abstract class CPlayer extends CActor
 		AddTimer( 'PlayerTick', 0.f, true );
 		InitializeParryType();
 		SetCanPlayHitAnim( true );
+
 		
 		theGame.RemoveTimeScale( theGame.GetTimescaleSource(ETS_DebugInput) );
+		
 		
 		if( inv )
 		{
@@ -293,13 +297,18 @@ statemachine import abstract class CPlayer extends CActor
 		
 		
 		ResumeStaminaRegen( 'Sprint' );
+		
 		photomodeManager = new PhotomodeManager in this;
 		photomodeManager.Initialize();
+		
+		
+		
 		invertedLockOption = ((CInGameConfigWrapper)theGame.GetInGameConfigWrapper()).GetVarValue( 'Controls', 'InvertLockOption' );
 		invertedControllerCameraX = ((CInGameConfigWrapper)theGame.GetInGameConfigWrapper()).GetVarValue( 'Controls', 'InvertCameraX' );
 		invertedControllerCameraY = ((CInGameConfigWrapper)theGame.GetInGameConfigWrapper()).GetVarValue( 'Controls', 'InvertCameraY' );
 		invertedMouseCameraX = ((CInGameConfigWrapper)theGame.GetInGameConfigWrapper()).GetVarValue( 'Controls', 'InvertCameraXOnMouse' );
 		invertedMouseCameraY = ((CInGameConfigWrapper)theGame.GetInGameConfigWrapper()).GetVarValue( 'Controls', 'InvertCameraYOnMouse' );
+		
 	}
 	
 	
@@ -764,14 +773,18 @@ statemachine import abstract class CPlayer extends CActor
 	{
 		lastAxisInputIsMovement = true;
 	}
+	
+	
 	private var invertedLockOption : bool;
 	private var invertedControllerCameraX, invertedControllerCameraY : bool;
 	private var invertedMouseCameraX, invertedMouseCameraY : bool;
+	
 	public function SetInvertedLockOption(set : bool) {invertedLockOption = set;}
 	public function SetInvertedCameraX(set : bool) {invertedControllerCameraX = set;}
 	public function SetInvertedCameraY(set : bool) {invertedControllerCameraY = set;}
 	public function SetInvertedMouseCameraX(set : bool) {invertedMouseCameraX = set;}
 	public function SetInvertedMouseCameraY(set : bool) {invertedMouseCameraY = set;}
+	
 
 	private var bRAxisReleasedLastFrame 	: bool;
 	private var selectTargetTime 			: float;
@@ -788,8 +801,9 @@ statemachine import abstract class CPlayer extends CActor
 		
 		if ( this.IsCameraLockedToTarget() )
 		{
-			currTime = theGame.GetEngineTimeAsSeconds();
-		
+			currTime = theGame.GetEngineTimeAsSeconds();	
+
+			
 			if(invertedLockOption)
 			{
 				if(thePlayer.IsPCModeEnabled())
@@ -803,6 +817,8 @@ statemachine import abstract class CPlayer extends CActor
 					if(invertedControllerCameraY) rightStickVector.Y *= -1;
 				}
 			}
+			
+			
 			if ( thePlayer.IsPCModeEnabled() )
 			{
 				if ( rawLengthR > 0.f )
@@ -1003,7 +1019,6 @@ statemachine import abstract class CPlayer extends CActor
 		RemoveReactions();
 		theGame.GetBehTreeReactionManager().CreateReactionEventIfPossible( thePlayer, 'PlayerInScene', -1.f, 60.0f, -1, -1, true ); 
 		PushState( 'PlayerDialogScene' );		
-
 	}
 
 	event OnBlockingSceneStarted_OnIntroCutscene( scene: CStoryScene )
@@ -1091,7 +1106,7 @@ statemachine import abstract class CPlayer extends CActor
 		{
 			if(IsAlive())
 			{
-			SetAlive(false);
+				SetAlive(false);
 			}
 			
 			if ( IsUsingHorse( true ) || IsUsingBoat() )
@@ -1101,9 +1116,18 @@ statemachine import abstract class CPlayer extends CActor
 			{
 				RaiseForceEvent( 'Death' );
 				
+				
 				theSound.EnterGameState(ESGS_Death);
 				theSound.SoundEvent( 'gui_global_player_death_thump' );
+				
 				theGame.SetTimeScale(0.6f, theGame.GetTimescaleSource(ETS_DebugInput), theGame.GetTimescalePriority(ETS_DebugInput), false, true );
+				
+				
+				
+				
+				
+				
+				
 			}
 			
 			theGame.FadeOutAsync(DEATH_SCREEN_OPEN_DELAY - 0.1 );
@@ -1139,6 +1163,8 @@ statemachine import abstract class CPlayer extends CActor
 			theTelemetry.LogWithLabel(TE_FIGHT_PLAYER_DIES, damageAction.attacker.ToString());
 		}
 	}
+	
+	
 	timer function JumpOnRagdollFix( deltaTime : float , id : int)
 	{
 		TurnOnRagdoll();
@@ -1391,14 +1417,16 @@ statemachine import abstract class CPlayer extends CActor
 	
 	public function IsSprintActionPressed() : bool
 	{
+		
 		if(thePlayer.GetLeftStickSprint() && theInput.LastUsedGamepad())
 		{
 			return GetIsSprintToggled();
 		}
 		else
 		{
-		return theInput.IsActionPressed('Sprint') || sprintToggle;
+			return theInput.IsActionPressed('Sprint') || sprintToggle;
 		}
+		
 	}
 	
 	public function SetSprintToggle( flag : bool )
@@ -2068,6 +2096,7 @@ statemachine import abstract class CPlayer extends CActor
 	public function SetCanPlaySpecificVoiceset( val : bool ) 			{ canPlaySpecificVoiceset = val; }
 	timer function ResetSpecificVoicesetFlag( dt : float, id : int )	{ SetCanPlaySpecificVoiceset( true ); }
 	
+	
 	private var numberOfEnemiesAttacking : int;
 	final function SetPlayerUnderAttack( toggle : bool )
 	{
@@ -2080,10 +2109,14 @@ statemachine import abstract class CPlayer extends CActor
 			numberOfEnemiesAttacking -= 1;
 		}
 	}
+	
 	final function IsPlayerUnderAttack() : bool
 	{
 		return numberOfEnemiesAttacking;
 	}
+	
+	
+	
 	function GetThreatLevel() : int
 	{
 		return 5;

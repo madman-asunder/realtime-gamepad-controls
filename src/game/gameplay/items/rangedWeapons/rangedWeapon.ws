@@ -708,7 +708,9 @@ class Crossbow extends RangedWeapon
 	}
 	
 	event OnReplaceAmmo()
-	{	
+	{
+		
+		
 			ClearDeployedEntity(true);
 			SetBehaviorGraphVariables( 'isWeaponLoaded', false );
 			previousAmmoItemName = '';
@@ -1323,7 +1325,7 @@ state State_WeaponAim in RangedWeapon
 	{
 		var targetToPlayerHeading 	: float;
 		var startTime				: float; 
-	
+		
 		startTime = theGame.GetEngineTimeAsSeconds();
 		while( theGame.GetEngineTimeAsSeconds() < startTime + 0.2 )
 		{
@@ -1384,10 +1386,8 @@ state State_WeaponAim in RangedWeapon
 				}
 				else
 					parent.ownerPlayer.playerAiming.OnAddAimingSloMo();
-			}
-		//modW3ReduxRGC++
+			}	
 		}
-		//modW3ReduxRGC--
 		
 		
 		else if ( !parent.ownerPlayer.IsUsingVehicle() )

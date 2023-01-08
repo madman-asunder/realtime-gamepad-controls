@@ -8,7 +8,7 @@
 
 
 class CR4HudModuleControlsFeedback extends CR4HudModuleBase
-{
+{		
 	private var	m_fxSetSwordTextSFF 	: CScriptedFlashFunction;
 	private var m_flashValueStorage 	: CScriptedFlashValueStorage;
 	private var m_currentInputContext	: name;
@@ -30,61 +30,61 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 	private var m_CurrentHorseComp		: W3HorseComponent;
 
 	private const var KEY_CONTROLS_FEEDBACK_LIST : string; 		default KEY_CONTROLS_FEEDBACK_LIST 		= "hud.module.controlsfeedback";
-
-
+	
+	
 	private var minimapModule : CR4HudModuleMinimap2;
 	private var objectiveModule : CR4HudModuleQuests;
-
+	
 
 	event  OnConfigUI()
-	{
+	{		
 		var flashModule : CScriptedFlashSprite;
 		var hud : CR4ScriptedHud;
-
-		m_anchorName = "mcAnchorControlsFeedback";
+		
+		m_anchorName = "mcAnchorControlsFeedback"; 
 		m_displaySprint = thePlayer.IsActionAllowed(EIAB_RunAndSprint);
 		super.OnConfigUI();
-		flashModule = GetModuleFlash();
+		flashModule = GetModuleFlash();	
 		m_flashValueStorage = GetModuleFlashValueStorage();
 		m_fxSetSwordTextSFF = flashModule.GetMemberFlashFunction( "setSwordText" );
-
+		
 		SetTickInterval( 0.5 );
-
+		
 		hud = (CR4ScriptedHud)theGame.GetHud();
-
+		
 		UpdateInputContext(hud.currentInputContext);
-
+		
 		if (hud)
 		{
 			hud.UpdateHudConfig('ControlsFeedbackModule', true);
-
-
+			
+			
 			minimapModule = (CR4HudModuleMinimap2)hud.GetHudModule("Minimap2Module");
 			objectiveModule = (CR4HudModuleQuests)hud.GetHudModule("QuestsModule");
-
+			
 		}
 	}
-
+	
 	private function GetMinimapModule()
 	{
 		var hud : CR4ScriptedHud;
-
+		
 		hud = (CR4ScriptedHud)theGame.GetHud();
 		if(hud)
 			minimapModule = (CR4HudModuleMinimap2)hud.GetHudModule("Minimap2Module");
 	}
-
+	
 	private function GetObjectiveModule()
 	{
 		var hud : CR4ScriptedHud;
-
+		
 		hud = (CR4ScriptedHud)theGame.GetHud();
 		if(hud)
 			objectiveModule = (CR4HudModuleQuests)hud.GetHudModule("QuestsModule");
 	}
 
 	public function UpdateInputContext( inputContextName :name )
-	{
+	{		
 		m_currentInputContext = inputContextName;
 		if( m_currentInputContext == 'JumpClimb' )
 		{
@@ -93,21 +93,21 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 		}
 		SendInputContextActions(inputContextName);
 	}
-
+	
 	event OnTick( timeDelta : float )
 	{
 		if ( !CanTick( timeDelta ) || !GetEnabled() )
 		{
 			return true;
 		}
-
-
+		
+		
 		if(!minimapModule)
 			GetMinimapModule();
 		if(!objectiveModule)
 			GetObjectiveModule();
-
-
+		
+		
 		if( m_currentPlayerWeapon != thePlayer.GetCurrentMeleeWeaponType() )
 		{
 			m_currentPlayerWeapon = thePlayer.GetCurrentMeleeWeaponType();
@@ -151,7 +151,7 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 			}
 		}
 	}
-
+	
 	function UpdateInputContextActions()
 	{
 		if( m_currentInputContext != thePlayer.GetCombatInputContext() )
@@ -162,25 +162,25 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 				SendInputContextActions(m_currentInputContext,true);
 		}
 	}
-
+	
 	function ForceModuleUpdate()
 	{
 		SendInputContextActions(m_currentInputContext, true);
 	}
-
+	
 	function SetEnabled( value : bool )
 	{
 		super.SetEnabled(value);
 		SendInputContextActions(m_currentInputContext, true);
-	}
-
+	}	
+	
 	private function UpdateSwordDisplay()
 	{
 		switch( m_currentPlayerWeapon )
 		{
 			case PW_Silver :
 				m_fxSetSwordTextSFF.InvokeSelfOneArg(FlashArgString(GetLocStringByKeyExt("panel_inventory_paperdoll_slotname_silver")));
-				break;
+				break;		
 			case PW_Steel :
 				m_fxSetSwordTextSFF.InvokeSelfOneArg(FlashArgString(GetLocStringByKeyExt("panel_inventory_paperdoll_slotname_steel")));
 				break;
@@ -189,7 +189,7 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 				break;
 		}
 	}
-
+	
 	private function SendInputContextActions( inputContextName :name, optional isForced : bool )
 	{
 		var l_FlashArray			: CScriptedFlashArray;
@@ -206,45 +206,45 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 		var bracketOpeningSymbol 	: string;
 		var bracketClosingSymbol  	: string;
 		var actionLabel			  	: string;
-
+		
 		var attackKeysPC 			: array< EInputKey >;
 		var attackModKeysPC 	    : array< EInputKey >;
 		var alterAttackKeysPC 	    : array< EInputKey >;
 		var modifier				: EInputKey;
-
-
+		
+		
 		var showCiriMinimap, showCiriObjective : bool;
-
-
+		
+		
 		GetBracketSymbols(bracketOpeningSymbol, bracketClosingSymbol);
-
+		
 		l_FlashArray = m_flashValueStorage.CreateTempFlashArray();
 		l_ActionsArray.Clear();
 		l_swimingSprint = false;
-
+		
 		if( GetEnabled() )
 		{
 			if( !isForced && ( m_previousInputContext == m_currentInputContext || ( m_previousInputContext == 'JumpClimb' && m_currentInputContext == 'Exploration' ) || ( m_previousInputContext == 'Exploration' && m_currentInputContext == 'JumpClimb' ) ) )
 			{
 				return;
 			}
-
+			
 			m_movementLockType 	= thePlayer.movementLockType;
 			m_displaySprint 	= thePlayer.IsActionAllowed(EIAB_RunAndSprint);
 			m_displayCallHorse 	= thePlayer.IsActionAllowed(EIAB_CallHorse);
 			m_lastUsedPCInput 	= theInput.LastUsedPCInput();
 			m_displayDiveDown 	= thePlayer.OnAllowedDiveDown();
 			m_displayJump		= thePlayer.IsActionAllowed(EIAB_Jump);
-
+			
 			m_CurrentHorseComp = thePlayer.GetUsedHorseComponent();
 			m_displayGallop 	= m_CurrentHorseComp.OnCanGallop();
 			m_displayCanter 	= m_CurrentHorseComp.OnCanCanter();
-
-
+			
+			
 			showCiriMinimap = minimapModule.GetMinimapDuringFocusCombat();
 			showCiriObjective = objectiveModule.GetObjectiveDuringFocusCombat();
-
-
+			
+			
 			switch(inputContextName)
 			{
 				case 'JumpClimb' :
@@ -293,26 +293,26 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 					}
 					break;
 				case 'Exploration_Replacer_Ciri' :
-					if( m_displaySprint && !theGame.IsFocusModeActive() )
+					if( m_displaySprint && !theGame.IsFocusModeActive() )	
 					{
-
+						
 						if(m_lastUsedPCInput || !thePlayer.GetLeftStickSprint())
-							l_ActionsArray.PushBack('Sprint');
+							l_ActionsArray.PushBack('Sprint');	
 						else
-							l_ActionsArray.PushBack('SprintToggle');
-
+							l_ActionsArray.PushBack('SprintToggle');	
+						
 					}
 					if( m_displayJump )
 					{
 						l_ActionsArray.PushBack('Jump');
 					}
-
+					
 					if( showCiriMinimap || showCiriObjective )
 						l_ActionsArray.PushBack('Focus');
-
+					
 					break;
-				case 'Horse' :
-				case 'Horse_Replacer_Ciri' :
+				case 'Horse' : 
+				case 'Horse_Replacer_Ciri' : 
 					if ( m_displayGallop || thePlayer.IsCiri() )
 					{
 						l_ActionsArray.PushBack('Gallop');
@@ -322,8 +322,8 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 						l_ActionsArray.PushBack('Canter');
 					}
 					l_ActionsArray.PushBack('HorseDismount');
-					break;
-				case 'Boat' :
+					break;			
+				case 'Boat' : 
 					l_ActionsArray.PushBack('GI_Accelerate');
 					l_ActionsArray.PushBack('GI_Decelerate');
 					l_ActionsArray.PushBack('BoatDismount');
@@ -331,19 +331,19 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 				case 'BoatPassenger' :
 					l_ActionsArray.PushBack('BoatDismount');
 					break;
-				case 'Swimming' :
+				case 'Swimming' : 
 					l_ActionsArray.PushBack('DiveDown');
 					if( m_displaySprint )
 					{
-
+						
 						if(m_lastUsedPCInput || !thePlayer.GetLeftStickSprint())
-							l_ActionsArray.PushBack('Sprint');
+							l_ActionsArray.PushBack('Sprint');	
 						else
-							l_ActionsArray.PushBack('SprintToggle');
-
+							l_ActionsArray.PushBack('SprintToggle');	
+						
 					}
 					l_swimingSprint = true;
-					break;
+					break;		
 				case 'Diving' :
 					if ( m_displayDiveDown )
 					{
@@ -352,18 +352,18 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 					l_ActionsArray.PushBack('DiveUp');
 					if( m_displaySprint )
 					{
-
+						
 						if(m_lastUsedPCInput || !thePlayer.GetLeftStickSprint())
-							l_ActionsArray.PushBack('Sprint');
+							l_ActionsArray.PushBack('Sprint');	
 						else
-							l_ActionsArray.PushBack('SprintToggle');
-
+							l_ActionsArray.PushBack('SprintToggle');	
+						
 					}
 					l_swimingSprint = true;
 					break;
-				case 'FistFight' :
-				case 'CombatFists' :
-				case 'Combat' :
+				case 'FistFight' : 
+				case 'CombatFists' : 
+				case 'Combat' : 
 					if( thePlayer.IsInCombatFist() )
 					{
 						//fist combat controls
@@ -407,100 +407,101 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 				outKeys.Clear();
 				outKeysPC.Clear();
 				theInput.GetPadKeysForAction(curAction, outKeys );
-
-
-
+				
+				
+				
 				if (m_lastUsedPCInput)
 				{
 					modifier = IK_None;
-
+					
 					attackModKeysPC.Clear();
 					theInput.GetPCKeysForAction('PCAlternate', attackModKeysPC );
-
+					
 					switch (curAction)
 					{
-
-
-
-
-
+						
+						
+						
+						
+						
 						case 'AttackLight' :
-
+								
 								attackKeysPC.Clear();
 								theInput.GetPCKeysForAction('AttackWithAlternateLight', attackKeysPC );
-
+								
 								if (attackKeysPC.Size() > 0 && attackKeysPC[0] != IK_None)
 								{
 									outKeysPC.PushBack(attackKeysPC[0]);
 								}
-								else
+								else								
 								{
 									alterAttackKeysPC.Clear();
 									theInput.GetPCKeysForAction('AttackWithAlternateHeavy', alterAttackKeysPC );
-
+									
 									if (attackModKeysPC.Size() > 0 && alterAttackKeysPC.Size() > 0 && attackModKeysPC[0] != IK_None && alterAttackKeysPC[0] != IK_None)
 									{
 										outKeysPC.PushBack(alterAttackKeysPC[0]);
 										modifier = attackModKeysPC[0];
 									}
 								}
-
+								
 							break;
-
+							
 						case 'AttackHeavy' :
 						case 'CiriSpecialAttackHeavy' :
-
-
-
+								
+								
+								
 								attackKeysPC.Clear();
 								theInput.GetPCKeysForAction('AttackWithAlternateHeavy', attackKeysPC );
-
+								
 								if (attackKeysPC.Size() > 0 && attackKeysPC[0] != IK_None)
 								{
 									outKeysPC.PushBack(attackKeysPC[0]);
 								}
-								else
+								else								
 								{
 									alterAttackKeysPC.Clear();
 									theInput.GetPCKeysForAction('AttackWithAlternateLight', alterAttackKeysPC );
-
+									
 									if (attackModKeysPC.Size() > 0 && alterAttackKeysPC.Size() > 0 && attackModKeysPC[0] != IK_None && alterAttackKeysPC[0] != IK_None)
 									{
 										outKeysPC.PushBack(alterAttackKeysPC[0]);
 										modifier = attackModKeysPC[0];
 									}
 								}
-
+								
 							break;
 						default:
 							theInput.GetPCKeysForAction(curAction, outKeysPC );
 							break;
 					}
 				}
-
-
-
-				switch (curAction)
+				
+				
+				
+				switch (curAction) 
 				{
 					case 'Sprint' :
-
-
-
-
-
+						
+						
+						
+						
+						
 						break;
 					case 'HorseDismount':
 						outKeys.PushBack(IK_Pad_B_CIRCLE);
 						break;
-
+						
 					default:
 						break;
 				}
+				
 
 				l_DataFlashObject = m_flashValueStorage.CreateTempFlashObject();
 				bindingGFxData = l_DataFlashObject.CreateFlashObject("red.game.witcher3.data.KeyBindingData");
 				bindingGFxData.SetMemberFlashInt("gamepad_keyCode", outKeys[0] );
-
+				
 				if (outKeysPC.Size() > 0)
 				{
 					bindingGFxData.SetMemberFlashInt("keyboard_keyCode", outKeysPC[0] );
@@ -513,15 +514,15 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 				{
 					bindingGFxData.SetMemberFlashInt("altKeyCode", modifier );
 				}
-
-				if( (curAction == 'Sprint' || curAction == 'SprintToggle') && ( m_currentInputContext != 'Swimming' && m_currentInputContext != 'Diving') )
+				
+				if( (curAction == 'Sprint' || curAction == 'SprintToggle') && ( m_currentInputContext != 'Swimming' && m_currentInputContext != 'Diving') )	
 				{
 					if( m_movementLockType != PMLT_Free )
 					{
 						curAction = 'Run';
 					}
 				}
-
+				
 				switch (curAction)
 				{
 					case 'Gallop':
@@ -553,12 +554,12 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 						}
 						break;
 					case 'Run':
-
+						
 						if(m_lastUsedPCInput || !thePlayer.GetLeftStickSprint())
 							labelPrefix = "<font color=\"#FCAD36\">" + bracketOpeningSymbol + GetLocStringByKeyExt("ControlLayout_hold") + bracketClosingSymbol + "</font>";
 						else
 							labelPrefix = "<font color=\"#FCAD36\">" + bracketOpeningSymbol + StrReplace(GetLocStringByKeyExt("ControlLayout_press")," -","") + bracketClosingSymbol + "</font>";
-
+						
 						break;
 					case 'GI_Accelerate':
 					case 'GI_Decelerate':
@@ -575,7 +576,7 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 						labelPrefix = "";
 						break;
 				}
-
+				
 				if( curAction == 'Jump' )
 				{
 					actionLabel = GetLocStringByKeyExt("panel_button_common_jump");
@@ -593,7 +594,7 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 				}
 				else if( curAction == 'SpawnHorse' || curAction == 'RGC_SpawnHorse' )
 				{
-					actionLabel = GetLocStringByKeyExt("ControlLayout_SummonHorse");
+					actionLabel = GetLocStringByKeyExt("ControlLayout_SummonHorse");					
 				}
 				else if (curAction == 'BoatDismount' && inputContextName == 'Boat')
 				{
@@ -622,19 +623,19 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 				}
 				else if( curAction == 'RGC_CastIgni')
 				{
-					actionLabel = "Igni";
+					actionLabel = GetLocStringById(1066291);
 				}
 				else if( curAction == 'RGC_CastAard')
 				{
-					actionLabel = "Aard";
+					actionLabel = GetLocStringById(1061945);
 				}
 				else if( curAction == 'RGC_CastQuen')
 				{
-					actionLabel = "Quen";
+					actionLabel = GetLocStringById(1066292);
 				}
 				else if( curAction == 'RGC_CastYrden')
 				{
-					actionLabel = "Yrden";
+					actionLabel = GetLocStringById(1066293);
 				}
 				//modW3ReduxRGC--
 				else
@@ -647,51 +648,51 @@ class CR4HudModuleControlsFeedback extends CR4HudModuleBase
 					bindingGFxData.SetMemberFlashString("label", labelPrefix + " <font color=\"#FFFFFF\">" + actionLabel + "</font>" );
 				else
 					bindingGFxData.SetMemberFlashString("label", " <font color=\"#FFFFFF\">" + actionLabel + "</font> " + labelPrefix );
-
+				
 				l_FlashArray.PushBackFlashObject(bindingGFxData);
 			}
 		}
-
-
-
+		
+		
+		
 		if( l_ActionsArray.Size() > 0 )
 		{
 			m_flashValueStorage.SetFlashArray( KEY_CONTROLS_FEEDBACK_LIST, l_FlashArray );
-
+			
 		}
 		m_previousInputContext = m_currentInputContext;
 		//modW3ReduxRGC++
 		m_previousInputModifier = m_currentInputModifier;
 		//modW3ReduxRGC--
 	}
-
+	
 	protected function UpdateScale( scale : float, flashModule : CScriptedFlashSprite ) : bool
 	{
 		return super.UpdateScale(scale * 0.75,flashModule );
 	}
-
+	
 	protected function UpdatePosition(anchorX:float, anchorY:float) : void
 	{
 		var l_flashModule 		: CScriptedFlashSprite;
 		var tempX				: float;
 		var tempY				: float;
-
+		
 		l_flashModule 	= GetModuleFlash();
-
-
-
-
+		
+		
+		
+		
 		tempX = anchorX - (300.0 * (1.0 - theGame.GetUIHorizontalFrameScale()));
-		tempY = anchorY - (200.0 * (1.0 - theGame.GetUIVerticalFrameScale()));
-
+		tempY = anchorY - (200.0 * (1.0 - theGame.GetUIVerticalFrameScale())); 
+		
 		l_flashModule.SetX( tempX );
-		l_flashModule.SetY( tempY );
+		l_flashModule.SetY( tempY );	
 	}
-
+	
 	event OnControllerChanged()
 	{
-
-	}
+		
+	}	
 
 	event OnInputHandled(NavCode:string, KeyCode:int, ActionId:int)
 	{
