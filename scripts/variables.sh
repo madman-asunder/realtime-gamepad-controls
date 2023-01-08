@@ -14,6 +14,6 @@ MOD_NAME="modW3ReduxRGC"
 RELEASE_NAME="RealtimeGamepadControls"
 
 # do not update anything below this line
-pushd ..
+pushd .. > /dev/null
 MOD_PATH=`pwd`
-popd
+popd > /dev/null

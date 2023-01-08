@@ -5,7 +5,7 @@
 
 source variables.sh
 
-pushd "$MOD_PATH/strings"
+pushd "$MOD_PATH/strings" > /dev/null
 
 rm -f *.w3strings
 "$MOD_KIT_PATH/w3strings.exe" --encode en.w3strings.csv --id-space $NEXUS_MOD_ID
@@ -29,4 +29,4 @@ cp en.w3strings ru.w3strings
 cp en.w3strings zh.w3strings
 cp en.w3strings cn.w3strings
 
-popd
+popd  > /dev/null

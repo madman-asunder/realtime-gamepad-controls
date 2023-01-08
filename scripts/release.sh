@@ -3,7 +3,7 @@
 source variables.sh
 source encode-csv-strings.sh
 
-pushd "$MOD_PATH"
+pushd "$MOD_PATH" > /dev/null
 
 rm -rf "release"
 mkdir "release"
@@ -19,4 +19,4 @@ cp -a resource/* release/$RELEASE_NAME/
 cp input.settings.begin.txt release/$RELEASE_NAME/input.settings.begin.txt
 cp README.md release/$RELEASE_NAME/README.md
 
-popd
+popd > /dev/null
