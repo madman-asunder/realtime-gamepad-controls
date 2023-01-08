@@ -170,8 +170,11 @@ statemachine class W3PlayerWitcher extends CR4Player
 		var items2 			: array<SItemUniqueId>;
 		var horseTemplate 	: CEntityTemplate;
 		var horseManager 	: W3HorseManager;
+		
+		
 		var exceptions : array<CBaseGameplayEffect>;
 		var wolf : CBaseGameplayEffect;
+		
 		
 		AddAnimEventCallback( 'ActionBlend', 			'OnAnimEvent_ActionBlend' );
 		AddAnimEventCallback('cast_begin',				'OnAnimEvent_Sign');
@@ -347,12 +350,20 @@ statemachine class W3PlayerWitcher extends CR4Player
 			NewGamePlusAdjustDLC5NilfgardianSet(inv);
 			NewGamePlusAdjustDLC10WolfSet(inv);
 			NewGamePlusAdjustDLC14SkelligeSet(inv);
+			
+			
+			
+			
 			if(horseManager)
 			{
 				NewGamePlusAdjustDLC1TemerianSet(horseManager.GetInventoryComponent());
 				NewGamePlusAdjustDLC5NilfgardianSet(horseManager.GetInventoryComponent());
 				NewGamePlusAdjustDLC10WolfSet(horseManager.GetInventoryComponent());
-				NewGamePlusAdjustDLC14SkelligeSet(horseManager.GetInventoryComponent());
+				NewGamePlusAdjustDLC14SkelligeSet(horseManager.GetInventoryComponent());	
+				
+				
+				
+				
 			}
 		}
 		
@@ -390,36 +401,60 @@ statemachine class W3PlayerWitcher extends CR4Player
 		theGame.GameplayFactsAdd( "PlayerIsGeralt" );
 		
 		isInitialized = true;
+		
+		
 		if(IsMutationActive( EPMT_Mutation6 ))
 			if(( (W3PlayerAbilityManager)abilityManager).GetMutationSoundBank(( EPMT_Mutation6 )) != "" ) 
 				theSound.SoundLoadBank(((W3PlayerAbilityManager)abilityManager).GetMutationSoundBank(( EPMT_Mutation6 )), true );
+		
+		
+		
 		if( FactsQuerySum("NGE_SkillPointsCheck") < 1 )
 		{
+			
 			ForceSetStat(BCS_Toxicity, 0);
 			wolf = GetBuff(EET_WolfHour);
 			if(wolf)
 				exceptions.PushBack(wolf);
+				
 			RemoveAllPotionEffects(exceptions);
+			
+
 			AddTimer('NGE_FixSkillPoints',1.0f,false);
 		}
+		
+		
+		if( ((W3PlayerAbilityManager)abilityManager).GetToxicityOffset() > ((W3PlayerAbilityManager)abilityManager).GetStatMax(BCS_Toxicity)) 
+		{
+			((W3PlayerAbilityManager)abilityManager).SetToxicityOffset(0.f);
+		}
+		
+
 		m_quenHitFxTTL = 0;
 		m_TriggerEffectDisablePending = false;
 		m_TriggerEffectDisabled = false;
 		ApplyGamepadTriggerEffect( equippedSign );
       	AddTimer( 'UpdateGamepadTriggerEffect', 0.1, true );
 	}
+	
+	
 	private timer function NGE_FixSkillPoints( dt : float, id : int )
 	{
 		((W3PlayerAbilityManager)abilityManager).NGEFixSkillPoints();
 		FixNGESwords();	
 		FactsAdd("NGE_SkillPointsCheck");
 	}
+	
+	
+	
 	private function FixNGESwords()
 	{
+		
 		var swords, swordsTemp : array<SItemUniqueId>;
 		var i : int;
 		var equipped : bool;
 		var runesList : array <name>;
+
 		swords = inv.GetItemsByName('sq304 Novigraadan sword 4');
 		if(swords.Size() > 0)
 		{
@@ -427,6 +462,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			{
 				if( IsItemEquipped(swords[i]) )
 					equipped = true;
+					
 				if ( inv.GetItemEnhancementCount(swords[i]) > 0 )
 				{
 					inv.GetItemEnhancementItems(swords[i], runesList);
@@ -435,12 +471,14 @@ statemachine class W3PlayerWitcher extends CR4Player
 						inv.AddAnItem( runesList[i] );
 					}		
 				}
+				
 				inv.RemoveItem(swords[i],1);
 				swordsTemp = inv.AddAnItem('sq304 Novigraadan sword 4',1,true,true);
 				if(equipped)
 					EquipItem(swordsTemp[0]);
 			}
 		}
+
 		swords = inv.GetItemsByName('q402 Skellige sword 3');
 		if(swords.Size() > 0)
 		{
@@ -448,6 +486,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			{
 				if( IsItemEquipped(swords[i]) )
 					equipped = true;
+					
 				if ( inv.GetItemEnhancementCount(swords[i]) > 0 )
 				{
 					inv.GetItemEnhancementItems(swords[i], runesList);
@@ -456,6 +495,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 						inv.AddAnItem( runesList[i] );
 					}		
 				}
+				
 				inv.RemoveItem(swords[i],1);
 				swordsTemp = inv.AddAnItem('q402 Skellige sword 3',1,true,true);
 				if(equipped)
@@ -463,11 +503,15 @@ statemachine class W3PlayerWitcher extends CR4Player
 			}
 		}
 	}
+	
+
 	event OnDestroyed()
 	{
 		RemoveTimer( 'UpdateGamepadTriggerEffect' );
+
 		theGame.ClearTriggerEffect(0);
 		theGame.ClearTriggerEffect(1);
+
 		super.OnDestroyed();
 	}
 
@@ -1078,8 +1122,11 @@ statemachine class W3PlayerWitcher extends CR4Player
     	
     	NewGamePlusReplaceDolBlathannaSet(inv);
     	NewGamePlusReplaceDolBlathannaSet(horseInventory);
+    	
     	NewGamePlusReplaceWhiteTigerSet(inv);
     	NewGamePlusReplaceWhiteTigerSet(horseInventory);
+    	
+    	
     	inputHandler.ClearLocksForNGP();
     	
     	
@@ -1090,6 +1137,10 @@ statemachine class W3PlayerWitcher extends CR4Player
     	
     	
     	m_quenReappliedCount = 1;
+    	
+    	
+    	
+    	
     	tiedWalk = false;
     	proudWalk = false;
     	injuredWalk = false;
@@ -1097,6 +1148,7 @@ statemachine class W3PlayerWitcher extends CR4Player
     	SetBehaviorVariable( 'proudWalk', 0.0f );
     	if( GetHorseManager().GetHorseMode() == EHM_Unicorn )
 			GetHorseManager().SetHorseMode( EHM_Normal );
+    	
 	}
 		
 	private final function NewGamePlusMarkItemsToNotAdjust(out inv : CInventoryComponent)
@@ -1243,27 +1295,36 @@ statemachine class W3PlayerWitcher extends CR4Player
 		NewGamePlusAdjustDLCItem('NGP DLC14 Skellige Boots', 'NGP DLC Compatibility Armor Mod', inv);
 	}
 	
+	
 	private final function NewGamePlusAdjustDLC18NetflixSet(inv : CInventoryComponent) 
 	{
 		NewGamePlusAdjustDLCItem('NGP Netflix Armor',   'NGP DLC Compatibility Chest Armor Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix Armor 1', 'NGP DLC Compatibility Chest Armor Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix Armor 2', 'NGP DLC Compatibility Chest Armor Mod', inv);
+		
 		NewGamePlusAdjustDLCItem('NGP Netflix Boots 1', 'NGP DLC Compatibility Armor Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix Boots 2', 'NGP DLC Compatibility Armor Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix Boots', 'NGP DLC Compatibility Armor Mod', inv);
+		
 		NewGamePlusAdjustDLCItem('NGP Netflix Gloves 1', 'NGP DLC Compatibility Armor Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix Gloves 2', 'NGP DLC Compatibility Armor Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix Gloves', 'NGP DLC Compatibility Armor Mod', inv);
+		
 		NewGamePlusAdjustDLCItem('NGP Netflix Pants 1', 'NGP DLC Compatibility Armor Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix Pants 2', 'NGP DLC Compatibility Armor Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix Pants', 'NGP DLC Compatibility Armor Mod', inv);
+		
 		NewGamePlusAdjustDLCItem('NGP Netflix steel sword',   'NGP Wolf Steel Sword Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix steel sword 1', 'NGP Wolf Steel Sword Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix steel sword 2', 'NGP Wolf Steel Sword Mod', inv);
+		
 		NewGamePlusAdjustDLCItem('NGP Netflix silver sword',   'NGP Wolf Silver Sword Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix silver sword 1', 'NGP Wolf Silver Sword Mod', inv);
 		NewGamePlusAdjustDLCItem('NGP Netflix silver sword 2', 'NGP Wolf Silver Sword Mod', inv);
 	}
+	
+	
+	
 	private final function NewGamePlusAdjustDolBlathannaSet(inv : CInventoryComponent) 
 	{
 		NewGamePlusAdjustDLCItem('NGP Dol Blathanna Armor',   'NGP DLC Compatibility Chest Armor Mod', inv);
@@ -1273,6 +1334,9 @@ statemachine class W3PlayerWitcher extends CR4Player
 		NewGamePlusAdjustDLCItem('NGP Dol Blathanna longsword',   'NGP Wolf Steel Sword Mod', inv);		
 		NewGamePlusAdjustDLCItem('NGP White Widow of Dol Blathanna',   'NGP Wolf Silver Sword Mod', inv);
 	}
+	
+	
+	
 	private final function NewGamePlusAdjustWhiteTigerSet(inv : CInventoryComponent) 
 	{
 		NewGamePlusAdjustDLCItem('NGP White Tiger Armor',   'NGP DLC Compatibility Chest Armor Mod', inv);
@@ -1282,6 +1346,8 @@ statemachine class W3PlayerWitcher extends CR4Player
 		NewGamePlusAdjustDLCItem('NGP Steel Vixen',   'NGP Wolf Steel Sword Mod', inv);		
 		NewGamePlusAdjustDLCItem('NGP Silver Vixen',   'NGP Wolf Silver Sword Mod', inv);
 	}
+	
+	
 	private final function NewGamePlusReplaceViperSet(out inv : CInventoryComponent)
 	{
 		NewGamePlusReplaceItem('Viper School steel sword', 'NGP Viper School steel sword', inv);
@@ -1503,27 +1569,37 @@ statemachine class W3PlayerWitcher extends CR4Player
 		NewGamePlusReplaceItem('Serpent Silver Sword 3', 'NGP Serpent Silver Sword 3', inv);
 	}
 	
+	
+	
 	private final function NewGamePlusReplaceNetflixSet(out inv : CInventoryComponent)
 	{
 		NewGamePlusReplaceItem('Netflix Armor', 'NGP Netflix Armor', inv);
 		NewGamePlusReplaceItem('Netflix Armor 1', 'NGP Netflix Armor 1', inv);
 		NewGamePlusReplaceItem('Netflix Armor 2', 'NGP Netflix Armor 2', inv);
+		
 		NewGamePlusReplaceItem('Netflix Gloves 1', 'NGP Netflix Gloves 1', inv);
 		NewGamePlusReplaceItem('Netflix Gloves 2', 'NGP Netflix Gloves 2', inv);
 		NewGamePlusReplaceItem('Netflix Gloves', 'NGP Netflix Gloves', inv);
+		
 		NewGamePlusReplaceItem('Netflix Pants 1', 'NGP Netflix Pants 1', inv);
 		NewGamePlusReplaceItem('Netflix Pants 2', 'NGP Netflix Pants 2', inv);
 		NewGamePlusReplaceItem('Netflix Pants', 'NGP Netflix Pants', inv);
+		
 		NewGamePlusReplaceItem('Netflix Boots 1', 'NGP Netflix Boots 1', inv);
 		NewGamePlusReplaceItem('Netflix Boots 2', 'NGP Netflix Boots 2', inv);
 		NewGamePlusReplaceItem('Netflix Boots', 'NGP Netflix Boots', inv);
+		
 		NewGamePlusReplaceItem('Netflix steel sword', 'NGP Netflix steel sword', inv);
 		NewGamePlusReplaceItem('Netflix steel sword 1', 'NGP Netflix steel sword 1', inv);
 		NewGamePlusReplaceItem('Netflix steel sword 2', 'NGP Netflix steel sword 2', inv);
+		
 		NewGamePlusReplaceItem('Netflix silver sword', 'NGP Netflix silver sword', inv);
 		NewGamePlusReplaceItem('Netflix silver sword 1', 'NGP Netflix silver sword 1', inv);
 		NewGamePlusReplaceItem('Netflix silver sword 2', 'NGP Netflix silver sword 2', inv);
 	}
+	
+	
+	
 	private final function NewGamePlusReplaceDolBlathannaSet(out inv : CInventoryComponent)
 	{
 		NewGamePlusReplaceItem('Dol Blathanna Armor', 'NGP Dol Blathanna Armor', inv);		
@@ -1533,6 +1609,9 @@ statemachine class W3PlayerWitcher extends CR4Player
 		NewGamePlusReplaceItem('Dol Blathanna longsword', 'NGP Dol Blathanna longsword', inv);		
 		NewGamePlusReplaceItem('White Widow of Dol Blathanna', 'NGP White Widow of Dol Blathanna', inv);
 	}
+	
+	
+	
 	private final function NewGamePlusReplaceWhiteTigerSet(out inv : CInventoryComponent)
 	{
 		NewGamePlusReplaceItem('White Tiger Armor', 'NGP White Tiger Armor', inv);		
@@ -1542,6 +1621,8 @@ statemachine class W3PlayerWitcher extends CR4Player
 		NewGamePlusReplaceItem('Steel Vixen', 'NGP Steel Vixen', inv);		
 		NewGamePlusReplaceItem('Silver Vixen', 'NGP Silver Vixen', inv);
 	}
+	
+	
 	public function GetEquippedSword(steel : bool) : SItemUniqueId
 	{
 		var item : SItemUniqueId;
@@ -1798,38 +1879,47 @@ statemachine class W3PlayerWitcher extends CR4Player
 			SelectQuickslotItem( quickSlotItems[ 0 ] );
 		}
 	}
+
 	public function OnShieldHit()
 	{
 		m_quenHitFxTTL = 0.2;
 		ApplyGamepadTriggerEffect( equippedSign );
 	}
+
 	timer function UpdateGamepadTriggerEffect( dt : float, id : int )
 	{
 		if( m_TriggerEffectDisablePending )
 		{
 			m_TriggerEffectDisableTTW -= dt;
+
 			if( m_TriggerEffectDisableTTW < 0 )
 			{
 				m_TriggerEffectDisabled = true;
 				m_TriggerEffectDisablePending = false;
 			}
 		}
+
 		if( m_TriggerEffectDisabled  &&  !theInput.IsActionPressed('CastSign') )
 			m_TriggerEffectDisabled = false;
+
 		m_quenHitFxTTL -= dt;
 		ApplyGamepadTriggerEffect( equippedSign );
 	}
+
 	public function ApplyCastSettings()
 	{
 		ApplyGamepadTriggerEffect( equippedSign );
 	}
+
 	private function ApplyGamepadTriggerEffect( type : ESignType )
 	{
 		var mode : int;
 		var param : array<Vector>;
 		var cur_sign : W3SignEntity;
 		var sign_skill : ESkill;
+
 		sign_skill = SignEnumToSkillEnum( type );
+
 		if( !thePlayer.CanUseSkill(sign_skill)  ||  !HasStaminaToUseSkill(sign_skill,false) )
 		{
 			theGame.SetTriggerEffect( 1, GTFX_Off, param );
@@ -1844,13 +1934,16 @@ statemachine class W3PlayerWitcher extends CR4Player
 		{
 			lastPressedWithNostamina = false;
 		}
+
 		if(lastPressedWithNostamina)
 		{
 			return;
 		}
+
 		if( type == ST_Igni  &&  IsCurrentSignChanneled() )
 		{
 			mode = GTFX_MultiVibration;
+			
 			param.Resize( 10 );
 			param[0].Y = 0.3; 
 			param[0].X = 0.0;
@@ -1863,12 +1956,15 @@ statemachine class W3PlayerWitcher extends CR4Player
 			param[7].X = 0.8;
 			param[8].X = 0.8;
 			param[9].X = 0.9;
+
 			theGame.SetTriggerEffect( 1, mode, param );
 			return;
 		}
+
 		if( type == ST_Quen  &&  m_quenHitFxTTL > 0  &&  HasBuff( EET_BasicQuen ) )
 		{
 			mode = GTFX_MultiVibration;
+			
 			param.Resize( 10 );
 			param[0].Y = 0.5; 
 			param[0].X = 0.0;
@@ -1881,9 +1977,11 @@ statemachine class W3PlayerWitcher extends CR4Player
 			param[7].X = 0.8;
 			param[8].X = 0.99;
 			param[9].X = 0.99;
+
 			theGame.SetTriggerEffect( 1, mode, param );
 			return;
 		}
+
 		
 		if( m_TriggerEffectDisabled )
 		{
@@ -1891,6 +1989,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			theGame.SetTriggerEffect( 0, GTFX_Off, param );
 			return;
 		}
+
 		if( 	
 			theGame.IsPaused() 
 			|| theGame.GetPhotomodeEnabled() 
@@ -1901,24 +2000,32 @@ statemachine class W3PlayerWitcher extends CR4Player
 		{
 			theGame.SetTriggerEffect( 1, GTFX_Off, param );
 			theGame.SetTriggerEffect( 0, GTFX_Off, param );
+
 			return;
 		}
+
 		mode = GTFX_Off;
+		
 		if( GetInputHandler().GetIsAltSignCasting() )
 		{
 			mode = GTFX_Vibration;
+			
 			param.Resize( 1 );
 			param[0].X = 0.9; 
 			param[0].Y = 0.1; 
 			param[0].Z = 0.15; 
+
 			theGame.SetTriggerEffect( 1, mode, param );
+			
 			if( GetInputHandler().GetIsAltSignCastingPressed() )
 			{
 				mode = GTFX_Weapon;
+
 				param.Resize( 1 );
 				param[0].X = 0.1; 
 				param[0].Y = 0.5; 
 				param[0].Z = 1.0; 
+				
 				theGame.SetTriggerEffect( 0, mode, param );
 			}
 			else
@@ -1931,6 +2038,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			if( type == ST_Aard )
 			{
 				mode = GTFX_MultiFeedback;
+				
 				param.Resize( 10 );
 				param[0].X = 0.0;
 				param[1].X = 0.0;
@@ -1946,6 +2054,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			else if( type == ST_Axii )
 			{
 				mode = GTFX_Vibration;
+				
 				param.Resize( 1 );
 				param[0].X = 0.8; 
 				param[0].Y = 0.15; 
@@ -1954,6 +2063,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			else if( type == ST_Igni )
 			{
 				mode = GTFX_Weapon;
+
 				param.Resize( 1 );
 				param[0].X = 0.5; 
 				param[0].Y = 0.7; 
@@ -1962,6 +2072,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			else if( type == ST_Quen )
 			{
 				mode = GTFX_Vibration;
+				
 				param.Resize( 1 );
 				param[0].X = 0.8; 
 				param[0].Y = 0.25; 
@@ -1970,15 +2081,19 @@ statemachine class W3PlayerWitcher extends CR4Player
 			else if( type == ST_Yrden )
 			{
 				mode = GTFX_Vibration;
+				
 				param.Resize( 1 );
 				param[0].X = 0.9; 
 				param[0].Y = 0.5; 
 				param[0].Z = 0.99; 
 			}
+			
 			theGame.SetTriggerEffect( 1, mode, param );
 			theGame.SetTriggerEffect( 0, GTFX_Off, param );
 		}		
+
 	}
+		
 	
 	function SetEquippedSign( signType : ESignType )
 	{
@@ -2142,15 +2257,18 @@ statemachine class W3PlayerWitcher extends CR4Player
 		return true;
 	}
 	
+	
 	public final function RemoveExtraOilsFromItem( item : SItemUniqueId )
 	{
 		var oils : array< CBaseGameplayEffect >;
 		var i, cnt : int;
 		var buff : W3Effect_Oil;
-	
+
 		
 		inv.RemoveAllOilsFromItem(item);
 		return;		
+		
+		
 		
 	}
 	
@@ -2322,14 +2440,18 @@ statemachine class W3PlayerWitcher extends CR4Player
 		cannotUseUndyingSkill = false;
 	}
 	
+	
 	public function GetCannotUseUndying() : bool
 	{
 		return cannotUseUndyingSkill;
 	}	
+	
 	public function SetCannotUseUndyingSkill(set : bool)
 	{
 		cannotUseUndyingSkill = set;
 	}
+	
+	
 	event OnTakeDamage( action : W3DamageAction)
 	{
 		var currVitality, rgnVitality, hpTriggerTreshold : float;
@@ -3002,7 +3124,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 	{
 		var actors : array< CActor >;
 		
-			
+		
 	}
 	
 	public final function IsInFistFight() : bool
@@ -3608,7 +3730,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 		{
 			fastAttackCounter = 0;
 			heavyAttackCounter = 0;			
-		}
+		}		
 	}
 	
 	//modW3ReduxRGC++
@@ -5164,6 +5286,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 		return selectedPotionSlotLower;
 	}
 	
+	
 	public final function FlipSelectedPotion(isUpperSlot : bool) : bool
 	{
 		//modW3ReduxRGC++
@@ -5440,6 +5563,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 		return 'Bodkin Bolt';
 	}
 	
+	
 	public final function AddAndEquipInfiniteBolt(optional forceBodkin : bool, optional forceHarpoon : bool)
 	{
 		var bolt, bodkins, harpoons : array<SItemUniqueId>;
@@ -5544,32 +5668,46 @@ statemachine class W3PlayerWitcher extends CR4Player
 
 		return true;
 	}
+	
+	
 	public final function CheckForFullyArmedByTag(setItemTag : name)
 	{
 		var doneParts, totalParts : int;
 		var item : SItemUniqueId;
+		
 		if(setItemTag == '')
 			return;
+			
+		
 		doneParts = 0;
 		totalParts = 6;
 		if(GetItemEquippedOnSlot(EES_SteelSword, item) && inv.ItemHasTag(item, setItemTag))
 			doneParts += 1;
+		
 		if(GetItemEquippedOnSlot(EES_SilverSword, item) && inv.ItemHasTag(item, setItemTag))
 			doneParts += 1;
+			
 		if(GetItemEquippedOnSlot(EES_Boots, item) && inv.ItemHasTag(item, setItemTag))
 			doneParts += 1;
+			
 		if(GetItemEquippedOnSlot(EES_Pants, item) && inv.ItemHasTag(item, setItemTag))
 			doneParts += 1;
+			
 		if(GetItemEquippedOnSlot(EES_Gloves, item) && inv.ItemHasTag(item, setItemTag))
 			doneParts += 1;
+			
 		if(GetItemEquippedOnSlot(EES_Armor, item) && inv.ItemHasTag(item, setItemTag))
 			doneParts += 1;
+			
+		
 		if(setItemTag == theGame.params.ITEM_SET_TAG_BEAR || setItemTag == theGame.params.ITEM_SET_TAG_LYNX)
 		{
 			totalParts += 1;
 			if(GetItemEquippedOnSlot(EES_RangedWeapon, item) && inv.ItemHasTag(item, setItemTag))
 				doneParts += 1;
 		}
+		
+		
 		if(doneParts >= totalParts) 
 		{
 			theGame.GetGamerProfile().AddAchievement(EA_FullyArmed);
@@ -5773,7 +5911,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 	{
 		if(slot == EES_InvalidSlot || slot < 0 || slot > EnumGetMax('EEquipmentSlots'))
 			return false;
-
+			
 		return inv.IsIdValid(itemSlots[slot]);
 	}
 	
@@ -6987,6 +7125,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			if(target)
 				target.SignalGameplayEvent( 'DodgeSign' );
 		}
+
 		m_TriggerEffectDisablePending = true;
 		m_TriggerEffectDisableTTW = 0.3; 
 		
@@ -7119,10 +7258,12 @@ statemachine class W3PlayerWitcher extends CR4Player
 		
 		duration = duration * (1 + skillPassiveMod + mutagenSkillMod);
 		
+		
 		if( IsSetBonusActive( EISB_Netflix_1 ) )
 		{
 			duration += (duration * (amountOfSetPiecesEquipped[ EIST_Netflix ] * 7 )) / 100 ;
 		}
+		
 		return duration;
 	}
 	
@@ -7257,6 +7398,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			mutagenParams.potionItemName = inv.GetItemName(item);
 			
 			finalPotionToxicity += 0.001f;
+			
 			potionParams.buffSpecificParams = mutagenParams;
 			
 			if( IsMutationActive( EPMT_Mutation10 ) && !HasBuff( EET_Mutation10 ) )
@@ -7298,7 +7440,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 		if(ret == EI_Pass || ret == EI_Override || ret == EI_Cumulate)
 		{
 			if( finalPotionToxicity > 0.f )
-			{
+			{				
 				abilityManager.GainStat(BCS_Toxicity, finalPotionToxicity );
 			}
 			
@@ -7568,8 +7710,11 @@ statemachine class W3PlayerWitcher extends CR4Player
 	
 	event OnLevelGained(currentLevel : int, show : bool)
 	{
+		
 		var swords : array<SItemUniqueId>;
 		var i : int;
+		
+	
 		var hud : CR4ScriptedHud;
 		hud = (CR4ScriptedHud)theGame.GetHud();
 		
@@ -7597,17 +7742,21 @@ statemachine class W3PlayerWitcher extends CR4Player
 		{
 			hud.OnLevelUpUpdate(currentLevel, show);
 		}
+		
+		
 		swords = inv.GetItemsByName('sq304 Novigraadan sword 4');
 		for(i=0;i<swords.Size();i+=1)
 		{
 			inv.AddItemCraftedAbility(swords[i], 'sq304_sword_upgrade _Stats', true);			
 		}
+		
 		swords.Clear();
 		swords = inv.GetItemsByName('q402 Skellige sword 3');
 		for(i=0;i<swords.Size();i+=1)
 		{
 			inv.AddItemCraftedAbility(swords[i], 'q402_sword_upgrade _Stats', true);			
 		}
+		
 		
 		theGame.RequestAutoSave( "level gained", false );
 	}
@@ -8692,12 +8841,16 @@ statemachine class W3PlayerWitcher extends CR4Player
 	{
 		var i : int;
 		var pam : W3PlayerAbilityManager;
+		
+		
 		if ( IsCastingSign() )
 		{
 			AddTimer( 'DelayedRemoveTemporarySkills', 0.1,,,, true );
 			return;
 		}
+		
 		AddTimer( 'SuperchargedSignCleanup', 0.1,,,, true );
+		
 	
 		if(tempLearnedSignSkills.Size() > 0)
 		{
@@ -8712,20 +8865,26 @@ statemachine class W3PlayerWitcher extends CR4Player
 		RemoveAbilityAll(SkillEnumToName(S_Sword_s19));
 	}
 	
+	
+	
 	public timer function SuperchargedSignCleanup(dt : float, id : int)
 	{
 		superchargedSign = false;
 	}
+	
 	public timer function DelayedRemoveTemporarySkills(dt : float, id : int)
 	{
 		var i : int;
 		var pam : W3PlayerAbilityManager;
+		
 		if ( IsCastingSign() )
 		{
 			AddTimer( 'DelayedRemoveTemporarySkills', 0.1,,,, true );
 			return;
 		}
+		
 		AddTimer( 'SuperchargedSignCleanup', 0.1,,,, true );
+		
 		if(tempLearnedSignSkills.Size() > 0)
 		{
 			pam = (W3PlayerAbilityManager)abilityManager;
@@ -8733,10 +8892,14 @@ statemachine class W3PlayerWitcher extends CR4Player
 			{
 				pam.RemoveTemporarySkill(tempLearnedSignSkills[i]);
 			}
+			
 			tempLearnedSignSkills.Clear();
 		}
 		RemoveAbilityAll(SkillEnumToName(S_Sword_s19));
 	}
+	
+	
+	
 	public function RemoveTemporarySkill(skill : SSimpleSkill) : bool
 	{
 		var pam : W3PlayerAbilityManager;
@@ -8749,11 +8912,16 @@ statemachine class W3PlayerWitcher extends CR4Player
 	}
 	
 	
+	
 	private var superchargedSign : bool;
 	public function IsSuperchargedSign() : bool
 	{
 		return superchargedSign;
 	}
+	
+	
+	
+	
 	private function AddTemporarySkills()
 	{
 		if(CanUseSkill(S_Sword_s19) && GetStat(BCS_Focus) >= 3)
@@ -8762,8 +8930,10 @@ statemachine class W3PlayerWitcher extends CR4Player
 			tempLearnedSignSkills = ((W3PlayerAbilityManager)abilityManager).AddTempNonAlchemySkills();						
 			DrainFocus(GetStat(BCS_Focus));
 			if ( !this.HasAbility( SkillEnumToName(S_Sword_s19) ) ) 
-			AddAbilityMultiple(SkillEnumToName(S_Sword_s19), GetSkillLevel(S_Sword_s19));			
+				AddAbilityMultiple(SkillEnumToName(S_Sword_s19), GetSkillLevel(S_Sword_s19));
+			
 			superchargedSign = true;
+			
 		}
 	}
 
@@ -9688,16 +9858,22 @@ statemachine class W3PlayerWitcher extends CR4Player
 	
 	public function Runeword10Triggerred()
 	{
-		var min, max : SAbilityAttributeValue; 
+		var min, max : SAbilityAttributeValue;
 		var amount : float; 
 		
+		
+		
 		theGame.GetDefinitionsManager().GetAbilityAttributeValue( 'Runeword 10 _Stats', 'stamina_runeword_gain', min, max );
+		
+		
 		amount = min.valueMultiplicative * GetStatMax(BCS_Stamina);
 		if ( GetStat(BCS_Stamina) + amount > GetStatMax(BCS_Stamina) )
 		{
 			amount = GetStatMax(BCS_Stamina) - GetStat(BCS_Stamina);
 		}
 		GainStat(BCS_Stamina, amount);
+		
+		
 		PlayEffect('runeword_10_stamina');
 	}
 	
@@ -9706,13 +9882,19 @@ statemachine class W3PlayerWitcher extends CR4Player
 		var min, max : SAbilityAttributeValue;
 		var amount : float; 
 		
+		
+		
 		theGame.GetDefinitionsManager().GetAbilityAttributeValue( 'Runeword 12 _Stats', 'focus_runeword_gain', min, max );
+		
+		
 		amount = RandRangeF(max.valueAdditive, min.valueAdditive);
 		if ( GetStat(BCS_Focus) + amount > GetStatMax(BCS_Focus) )
 		{
 			amount = GetStatMax(BCS_Focus) - GetStat(BCS_Focus);
 		}
 		GainStat(BCS_Focus, amount);
+		
+		
 		PlayEffect('runeword_20_adrenaline');	
 	}
 	
@@ -10242,7 +10424,7 @@ statemachine class W3PlayerWitcher extends CR4Player
 			
 			
 			
-		
+			
 			return;
 		}
 		
@@ -10267,16 +10449,18 @@ statemachine class W3PlayerWitcher extends CR4Player
 		if( setType != EIST_Vampire )
 		{
 			if(amountOfSetPiecesEquipped[ setType ] == theGame.params.ITEMS_REQUIRED_FOR_MAJOR_SET_BONUS)
-		{
-			theGame.GetGamerProfile().AddAchievement( EA_ReadyToRoll );
-		}
-		
-		
+			{
+				theGame.GetGamerProfile().AddAchievement( EA_ReadyToRoll );
+			}
 			else 
 			{
 				theGame.GetGamerProfile().NoticeAchievementProgress( EA_ReadyToRoll, amountOfSetPiecesEquipped[ setType ]);
 			}
-			}
+		}
+		
+		
+		
+		
 		
 		
 		ManageActiveSetBonuses( setType );
@@ -10588,10 +10772,12 @@ statemachine class W3PlayerWitcher extends CR4Player
 			arrString.PushBack( FloatToString( min.valueAdditive * amountOfSetPiecesEquipped[ EIST_Vampire ] ) );
 			finalString = GetLocStringByKeyExtWithParams( tempString,,,arrString );
 			break;
+		
 		case EISB_Wolf_1:
 			arrString.PushBack( FloatToString( 1 * amountOfSetPiecesEquipped[ EIST_Wolf ] ) );
 			finalString = GetLocStringByKeyExtWithParams( tempString,,,arrString );
 			break;
+		
 		default:
 			finalString = GetLocStringByKeyExtWithParams( tempString );
 		}

@@ -13,7 +13,10 @@ NEXUS_MOD_ID=7475
 MOD_NAME="modW3ReduxRGC"
 RELEASE_NAME="RealtimeGamepadControls"
 
+# ensure prehooks are set up :)
+git config --local core.hooksPath .githooks
+
 # do not update anything below this line
-pushd ..
+pushd .. > /dev/null
 MOD_PATH=`pwd`
-popd
+popd > /dev/null

@@ -474,6 +474,7 @@ class CExplorationStateClimb extends CExplorationStateAbstract
 		handIKqueuedR			= false;
 		
 		m_ExplorationO.m_OwnerMAC.SetHandsIKOffsets( leftHandOffsetCur, rightHandOffsetCur );
+		
 		adjust2Dduration		= 0.0f;	
 		
 		
@@ -686,6 +687,7 @@ class CExplorationStateClimb extends CExplorationStateAbstract
 		m_ExplorationO.m_MoverO.SetManualMovement( false );
 		
 		
+		// modBetterTorchesNextGen
 		/*if ( restoreUsableItemLAtEnd )
 		{
 			restoreUsableItemLAtEnd = false;

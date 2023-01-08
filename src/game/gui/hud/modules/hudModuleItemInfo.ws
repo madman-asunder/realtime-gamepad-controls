@@ -171,7 +171,7 @@ class CR4HudModuleItemInfo extends CR4HudModuleBase
 				{
 					witcherPlayer.GetItemEquippedOnSlot( witcherPlayer.GetSelectedPotionSlotUpper(), item1 );
 					witcherPlayer.GetItemEquippedOnSlot( witcherPlayer.GetSelectedPotionSlotLower(), item2 );
-					
+				
 					if ( witcherPlayer.GetSelectedPotionSlotUpper() == EES_Potion1)
 					{
 						witcherPlayer.GetItemEquippedOnSlot( EES_Potion3, alterItem1 );
@@ -180,7 +180,7 @@ class CR4HudModuleItemInfo extends CR4HudModuleBase
 					{
 						witcherPlayer.GetItemEquippedOnSlot( EES_Potion1, alterItem1 );
 					}
-					
+				
 					if ( witcherPlayer.GetSelectedPotionSlotLower() == EES_Potion2)
 					{
 						witcherPlayer.GetItemEquippedOnSlot( EES_Potion4, alterItem2 );
@@ -189,9 +189,9 @@ class CR4HudModuleItemInfo extends CR4HudModuleBase
 					{
 						witcherPlayer.GetItemEquippedOnSlot( EES_Potion2, alterItem2 );
 					}
-					
+				
 					playerInv = thePlayer.GetInventory();
-					
+				
 					if ( !playerInv.IsIdValid(item1) && playerInv.IsIdValid( alterItem1 ) )
 					{
 						witcherPlayer.FlipSelectedPotion( true );
@@ -258,7 +258,8 @@ class CR4HudModuleItemInfo extends CR4HudModuleBase
 				m_fxSwitchAnimation.InvokeSelfOneArg( FlashArgInt( switchAnimation ) );
 			}
 		}
-			
+		
+		
 		if ( thePlayer.IsCombatMusicEnabled() || thePlayer.GetHealthPercents() < 1.f )
 			SetAlwaysDisplayed( true );
 		else

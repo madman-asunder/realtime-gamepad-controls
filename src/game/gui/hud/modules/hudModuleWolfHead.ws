@@ -406,6 +406,7 @@ class CR4HudModuleWolfHead extends CR4HudModuleBase
 	{
 		m_fxSetAlwaysDisplayed.InvokeSelfOneArg(FlashArgBool(value));
 	}
+	
 	public function GetWolfActivator() : CScriptedFlashFunction
 	{
 		return m_fxSwitchWolfActivation;
