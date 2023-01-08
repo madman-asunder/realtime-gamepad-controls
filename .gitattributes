@@ -1,1 +1,2 @@
 *.ws encoding=utf8
+*.bash     text eol=lf
