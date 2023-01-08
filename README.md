@@ -84,7 +84,8 @@ Note: if you are using simple mods and not any overhaul mods (especially if they
 3. Recommended: Start Witcher 3 to generate a new `input.settings` file.
 4. **Required**: Move `modW3ReduxRGC` folder to `{W3InstallLocation}/mods/modW3ReduxRGC`
 5. **Required**: Copy all contents from `input.settings.begin.txt` and paste at the beginning of `input.settings` in your `Documents/Witcher 3` folder
-6. **Required**: Add one line to the bottom of `dx11filelist.txt` and `dx12filelist.txt` (this is new to next gen)  
+6. **Required**: Copy `bin` folder to `{W3InstallLocation}/bin`
+6. **Required** (new to next gen): Add one line to the bottom of `dx11filelist.txt` and `dx12filelist.txt`
   ```
   modW3ReduxRGC.xml;
   ```
