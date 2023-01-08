@@ -1,17 +1,18 @@
-;TODO: update nexus mod id (nmid in id column) and strings
 ;meta[language=en]
 ; id      |key(hex)|key(str)| text
-211nmid001|        |panel_Mods|Mods
-211nmid002|        |panel_alchemy_and_equipment|Alchemy and Equipment
-211nmid003|        |panel_camera|Camera
-211nmid004|        |panel_characters|Characters
-211nmid005|        |panel_combat|Combat
-211nmid006|        |panel_gameplay|Gameplay
-211nmid007|        |panel_quests_and_adventures|Quests and Adventures
-211nmid008|        |panel_user_interface|User Interface
-211nmid009|        |panel_visuals_and_graphics|Visuals and Graphics
-211nmid010|        |panel_miscellaneous|Miscellaneous
-211nmid001|        |panel_{prefix}_name|{Mod Name}
-211nmid003|        |preset_Mods_{menu-strings-cat}_{prefix}_name|{Mod Name}
-211nmid005|        |preset_value_{prefix}_default|Default
-211nmid006|        |option_{prefix}_mod_enabled|MOD ENABLED
+2117475001||panel_Mods|Mods
+2117475002||panel_gameplay|Gameplay
+2117475003||panel_Config_RGC_ConfigName|RGC
+2117475004||preset_Mods_gameplay_Config_RGC_ConfigName|Realtime Gamepad Controls
+2117475005||preset_value_Config_RGC_ConfigNameDefault|Default
+2117475006||preset_value_Config_RGC_ConfigNameVanilla|Vanilla
+2117475007||option_Config_RGC_DefaultInventory|Default Quick Access Inventory
+2117475008||preset_value_Config_RGC_DefaultPotions|Potions
+2117475009||preset_value_Config_RGC_DefaultItems|Items
+2117475010||option_Config_RGC_ImmersiveMotion|Immersive Motion Integration
+2117475011||option_Config_RGC_InvAlwaysDisplay|Always Display Inventory HUD
+2117475012||option_Config_RGC_SprintStaminaUsage|Sprint Stamina Usage
+2117475013||preset_value_Config_RGC_SSU_Never|Never
+2117475014||preset_value_Config_RGC_SSU_Combat|Combat Only
+2117475015||preset_value_Config_RGC_SSU_Always|Always
+2117475016||panel_input_action_rgc_realtimemodifier|Sign Modifier

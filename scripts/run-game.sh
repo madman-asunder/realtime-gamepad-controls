@@ -8,6 +8,6 @@ pushd "$GAME_PATH"
 rm -f content/content0/*.redscripts
 pushd "$GAME_PATH/bin/$BIN_FOLDER_NAME"
 ./witcher3.exe -debugscripts &
-tail -F "$LOG_FILE_PATH"
+tail -F "$W3_USER_SETTINGS_PATH/scriptslog.txt"
 popd
 popd
