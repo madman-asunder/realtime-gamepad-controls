@@ -169,48 +169,49 @@ class CR4HudModuleItemInfo extends CR4HudModuleBase
 				}
 				else
 				{
-				witcherPlayer.GetItemEquippedOnSlot( witcherPlayer.GetSelectedPotionSlotUpper(), item1 );
-				witcherPlayer.GetItemEquippedOnSlot( witcherPlayer.GetSelectedPotionSlotLower(), item2 );
+					witcherPlayer.GetItemEquippedOnSlot( witcherPlayer.GetSelectedPotionSlotUpper(), item1 );
+					witcherPlayer.GetItemEquippedOnSlot( witcherPlayer.GetSelectedPotionSlotLower(), item2 );
 				
-				if ( witcherPlayer.GetSelectedPotionSlotUpper() == EES_Potion1)
-				{
-					witcherPlayer.GetItemEquippedOnSlot( EES_Potion3, alterItem1 );
-				}
-				else
-				{
-					witcherPlayer.GetItemEquippedOnSlot( EES_Potion1, alterItem1 );
-				}
+					if ( witcherPlayer.GetSelectedPotionSlotUpper() == EES_Potion1)
+					{
+						witcherPlayer.GetItemEquippedOnSlot( EES_Potion3, alterItem1 );
+					}
+					else
+					{
+						witcherPlayer.GetItemEquippedOnSlot( EES_Potion1, alterItem1 );
+					}
 				
-				if ( witcherPlayer.GetSelectedPotionSlotLower() == EES_Potion2)
-				{
-					witcherPlayer.GetItemEquippedOnSlot( EES_Potion4, alterItem2 );
-				}
-				else
-				{
-					witcherPlayer.GetItemEquippedOnSlot( EES_Potion2, alterItem2 );
-				}
+					if ( witcherPlayer.GetSelectedPotionSlotLower() == EES_Potion2)
+					{
+						witcherPlayer.GetItemEquippedOnSlot( EES_Potion4, alterItem2 );
+					}
+					else
+					{
+						witcherPlayer.GetItemEquippedOnSlot( EES_Potion2, alterItem2 );
+					}
 				
-				playerInv = thePlayer.GetInventory();
+					playerInv = thePlayer.GetInventory();
 				
-				if ( !playerInv.IsIdValid(item1) && playerInv.IsIdValid( alterItem1 ) )
-				{
-					witcherPlayer.FlipSelectedPotion( true );
-				}
-				else if ( !playerInv.IsIdValid(item2) && playerInv.IsIdValid( alterItem2 ) )
-				{
-					witcherPlayer.FlipSelectedPotion( false );
-				}
-				else if ( m_currentItemOnSlot1 == alterItem1 )
-				{
-					switchAnimation = 1;
-				}
-				else if ( m_currentItemOnSlot2 == alterItem2 )
-				{
-					switchAnimation = 2;
-				}
-				else
-				{
-					switchAnimation = -1;
+					if ( !playerInv.IsIdValid(item1) && playerInv.IsIdValid( alterItem1 ) )
+					{
+						witcherPlayer.FlipSelectedPotion( true );
+					}
+					else if ( !playerInv.IsIdValid(item2) && playerInv.IsIdValid( alterItem2 ) )
+					{
+						witcherPlayer.FlipSelectedPotion( false );
+					}
+					else if ( m_currentItemOnSlot1 == alterItem1 )
+					{
+						switchAnimation = 1;
+					}
+					else if ( m_currentItemOnSlot2 == alterItem2 )
+					{
+						switchAnimation = 2;
+					}
+					else
+					{
+						switchAnimation = -1;
+					}
 				}
 			}
 			//modW3ReduxRGC--
