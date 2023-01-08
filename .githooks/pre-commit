@@ -1,3 +1,3 @@
 #!/bin/bash
 
-source .githooks/ensure-utf8-ws-files.sh
+source .githooks/scripts/ensure-utf8-ws-files.sh
