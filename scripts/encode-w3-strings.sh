@@ -11,7 +11,7 @@ echo "removing any prior encoded w3strings..."
 rm -f *.w3strings
 
 echo "encoding w3strings for mod id $NEXUS_MOD_ID..."
-"$MOD_KIT_PATH/w3strings.exe" --encode en.w3strings.csv --id-space $NEXUS_MOD_ID
+./w3strings.exe --encode en.w3strings.csv --id-space $NEXUS_MOD_ID
 
 rm -f *.ws
 mv en.w3strings.csv.w3strings en.w3strings
