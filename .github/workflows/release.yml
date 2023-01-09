@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           cd scripts && ./release.sh && cd ..
-          cat ${{ github.event.inputs.version }} >> ./release/RealtimeGamepadControls/VERSION.txt
+          echo ${{ github.event.inputs.version }} > ./release/RealtimeGamepadControls/version.txt
 
       - name: Create Archive Artifact
         uses: montudor/action-zip@v1
