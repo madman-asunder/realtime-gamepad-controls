@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# encode the strings from the csv file in /strings and creates all the
+# encode the strings from the csv file in MOD_PATH/strings and creates all the
 # w3strings files
 
 source variables.sh
