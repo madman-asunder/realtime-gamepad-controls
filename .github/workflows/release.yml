@@ -23,8 +23,8 @@ jobs:
           echo ${{ github.event.inputs.version }} > ./release/RealtimeGamepadControls/version.txt
 
       - name: Create Zip Archive
-        shell: bash
-        run: zip -r release.zip ./release/RealtimeGamepadControls
+        shell: pwsh
+        run: Compress-Archive ./release/RealtimeGamepadControls release.zip
 
       - name: Create Release
         id: create_rgc_release
