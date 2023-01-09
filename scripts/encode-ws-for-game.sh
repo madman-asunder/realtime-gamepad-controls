@@ -20,7 +20,7 @@ for SOURCE_FILE in `find . -iname "*.ws"`; do
 	fi
   
 	if [ "$ENCODING" != "utf-16le" ]; then
-		echo "converting $FILE from $ENCODING to UTF-16LE. savint at: $1/$DIR"
+		echo "converting $FILE from $ENCODING to UTF-16LE. saving at: $1/$DIR"
 		mkdir -p "$1/$DIR"
 		iconv -f $ENCODING -t UTF-16LE $SOURCE_FILE > "$1/$SOURCE_FILE"
 
