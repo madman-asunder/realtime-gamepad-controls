@@ -22,12 +22,8 @@ jobs:
           cd scripts && ./release.sh && cd ..
           echo ${{ github.event.inputs.version }} > ./release/RealtimeGamepadControls/version.txt
 
-      - name: Archive Release
-        uses: thedoctor0/zip-release@main
-        with:
-          type: 'zip'
-          filename: 'RealtimeGamepadControls.zip'
-          directory: ./release/RealtimeGamepadControls
+      - name: Create Zip Archive
+        run: zip -r release.zip ./release/RealtimeGamepadControls
 
       - name: Create Release
         id: create_rgc_release
@@ -49,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_rgc_release.outputs.upload_url }}
-          asset_path: ./RealtimeGamepadControls.zip
+          asset_path: ./release.zip
           asset_name: RealtimeGamepadControls-v${{ github.event.inputs.version }}.zip
           asset_content_type: application/zip
 
