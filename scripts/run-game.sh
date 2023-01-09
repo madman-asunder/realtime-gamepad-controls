@@ -3,6 +3,7 @@
 
 source variables.sh
 source install.sh
+
 pushd "$GAME_PATH" > /dev/null
 
 echo "removing compiled redscripts to force recompile..."
@@ -14,5 +15,6 @@ pushd "$GAME_PATH/bin/$BIN_FOLDER_NAME" > /dev/null
 
 echo "attaching log to terminal..."
 tail -F "$W3_USER_SETTINGS_PATH/scriptslog.txt"
+
 popd > /dev/null
 popd > /dev/null
