@@ -11,12 +11,13 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
 
       - name: Build Release
+        shell: bash
         run: |
           cd scripts && ./release.sh && cd ..
           cat ${{ github.event.inputs.version }} >> ./release/RealtimeGamepadControls/VERSION.txt
