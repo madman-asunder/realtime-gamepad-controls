@@ -2,57 +2,57 @@
 
 name: Publish Release
 
-  on:
-    workflow_dispatch:
-      inputs:
-        version:
-          description: 'Release Version'     
-          required: true
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release Version'     
+        required: true
 
-  jobs:
-    release:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout Source Code
-          uses: actions/checkout@v3
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
 
-        - name: Build Release
-          run: |
-            cd scripts && ./release.sh && cd ..
-            cat ${{ github.event.inputs.version }} >> ./release/RealtimeGamepadControls/VERSION.txt
+      - name: Build Release
+        run: |
+          cd scripts && ./release.sh && cd ..
+          cat ${{ github.event.inputs.version }} >> ./release/RealtimeGamepadControls/VERSION.txt
 
-        - name: Create Archive Artifact
-          uses: montudor/action-zip@v1
-          with:
-            args: zip -qq -r RealtimeGamepadControls.zip ./release/RealtimeGamepadControls
+      - name: Create Archive Artifact
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r RealtimeGamepadControls.zip ./release/RealtimeGamepadControls
 
-        - name: Create Release
-          id: create_rgc_release
-          uses: actions/create-release@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: ${{ github.event.inputs.version }}
-            release_name: Release ${{ github.event.inputs.version }}
-            body: |
-              Testing
-            draft: false
-            prerelease: false
+      - name: Create Release
+        id: create_rgc_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          body: |
+            Testing
+          draft: false
+          prerelease: false
 
-        - name: Upload Release Asset
-          id: upload-release-asset 
-          uses: actions/upload-release-asset@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_new_release.outputs.upload_url }}
-            asset_path: ./RealtimeGamepadControls.zip
-            asset_name: RealtimeGamepadControls-v${{ github.event.inputs.version }}.zip
-            asset_content_type: application/zip
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_new_release.outputs.upload_url }}
+          asset_path: ./RealtimeGamepadControls.zip
+          asset_name: RealtimeGamepadControls-v${{ github.event.inputs.version }}.zip
+          asset_content_type: application/zip
 
-        - name: Create Git Tag For Release
-          id: tag_version
-          uses: mathieudutour/github-tag-action@v6.1
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            custom_tag: ${{ github.event.inputs.version }}
+      - name: Create Git Tag For Release
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ github.event.inputs.version }}
