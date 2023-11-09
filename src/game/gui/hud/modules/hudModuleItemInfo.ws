@@ -194,7 +194,7 @@ class CR4HudModuleItemInfo extends CR4HudModuleBase
 				{
 					witcherPlayer.GetItemEquippedOnSlot( witcherPlayer.GetSelectedPotionSlotUpper(), item1 );
 					witcherPlayer.GetItemEquippedOnSlot( witcherPlayer.GetSelectedPotionSlotLower(), item2 );
-				
+				}
 				if ( witcherPlayer.GetSelectedPotionSlotUpper() == EES_Potion1)
 				{
 					witcherPlayer.GetItemEquippedOnSlot( EES_Potion3, alterItem1 );

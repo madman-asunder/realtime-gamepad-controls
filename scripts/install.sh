@@ -13,7 +13,7 @@ source encode-w3-strings.sh
 cp ../strings/* "$GAME_PATH/mods/$MOD_NAME/content/"
 
 echo "installing menu..."
-cp mod-menu.xml "$GAME_PATH/bin/config/r4game/user_config_matrix/pc/${MOD_NAME}.xml"
+cp ../mod-menu.xml "$GAME_PATH/bin/config/r4game/user_config_matrix/pc/${MOD_NAME}.xml"
 
 if test -f "$MOD_PATH/input.settings.begin.txt"; then
 	echo "installing input settings..."
