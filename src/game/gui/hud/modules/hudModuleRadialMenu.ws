@@ -94,7 +94,7 @@ class CR4HudModuleRadialMenu extends CR4HudModuleBase
 	{	
 		var itemInfoModule : CR4HudModuleItemInfo;
 		itemInfoModule = (CR4HudModuleItemInfo)theGame.GetHud().GetHudModule("ItemInfoModule");
-		itemInfoModule.RadialMenuOn(on);
+		//itemInfoModule.RadialMenuOn(on); //modW3ReduxRGC++
 	}
 	
 	
@@ -993,43 +993,43 @@ class CR4HudModuleRadialMenu extends CR4HudModuleBase
 			if ( !GetWitcherPlayer().ShouldUseInfiniteWaterBolts() )
 			{
 			
-			for ( i = 0; i < count; i += 1 )
-			{
-				currentBolt = boltsList[ i ];
-				
-				if ( inv.GetItemLevel( currentBolt ) <= playerLevel )
+				for ( i = 0; i < count; i += 1 )
 				{
-					if ( inv.GetItemName( currentBolt ) == infiniteBoltItemName )
+					currentBolt = boltsList[ i ];
+					
+					if ( inv.GetItemLevel( currentBolt ) <= playerLevel )
 					{
+						if ( inv.GetItemName( currentBolt ) == infiniteBoltItemName )
+						{
+							
+							continue;
+						}
+						itemDataObject = m_flashValueStorage.CreateTempFlashObject();
+						itemName = GetLocStringByKeyExt( inv.GetItemLocalizedNameByUniqueID( currentBolt ) );
+						itemDescription = GetLocStringByKeyExt( inv.GetItemLocalizedDescriptionByUniqueID( currentBolt ) );
+						itemCategory = inv.GetItemCategory( currentBolt );
+						itemQuality = inv.GetItemQuality( currentBolt );
+						itemIconPath = "img://" + inv.GetItemIconPathByUniqueID( currentBolt );
 						
-						continue;
+						if( inv.ItemHasTag( currentBolt, theGame.params.TAG_INFINITE_AMMO ) )
+						{
+							chargesCount = -1;
+						}
+						else
+						{
+							chargesCount = inv.GetItemQuantity( currentBolt );
+						}
+						
+						itemDataObject.SetMemberFlashString( "name", itemName );
+						itemDataObject.SetMemberFlashString( "description", itemDescription );
+						itemDataObject.SetMemberFlashString( "itemIconPath", itemIconPath );
+						itemDataObject.SetMemberFlashBool( "isEquipped", currentBolt == equippedBolt );
+						itemDataObject.SetMemberFlashInt( "charges", chargesCount );
+						itemDataObject.SetMemberFlashInt( "id", ItemToFlashUInt( currentBolt ) );
+						
+						itemsList.PushBackFlashObject( itemDataObject );
 					}
-					itemDataObject = m_flashValueStorage.CreateTempFlashObject();
-					itemName = GetLocStringByKeyExt( inv.GetItemLocalizedNameByUniqueID( currentBolt ) );
-					itemDescription = GetLocStringByKeyExt( inv.GetItemLocalizedDescriptionByUniqueID( currentBolt ) );
-					itemCategory = inv.GetItemCategory( currentBolt );
-					itemQuality = inv.GetItemQuality( currentBolt );
-					itemIconPath = "img://" + inv.GetItemIconPathByUniqueID( currentBolt );
-					
-					if( inv.ItemHasTag( currentBolt, theGame.params.TAG_INFINITE_AMMO ) )
-					{
-						chargesCount = -1;
-					}
-					else
-					{
-						chargesCount = inv.GetItemQuantity( currentBolt );
-					}
-					
-					itemDataObject.SetMemberFlashString( "name", itemName );
-					itemDataObject.SetMemberFlashString( "description", itemDescription );
-					itemDataObject.SetMemberFlashString( "itemIconPath", itemIconPath );
-					itemDataObject.SetMemberFlashBool( "isEquipped", currentBolt == equippedBolt );
-					itemDataObject.SetMemberFlashInt( "charges", chargesCount );
-					itemDataObject.SetMemberFlashInt( "id", ItemToFlashUInt( currentBolt ) );
-					
-					itemsList.PushBackFlashObject( itemDataObject );
 				}
-			}
 			
 			}
 			
