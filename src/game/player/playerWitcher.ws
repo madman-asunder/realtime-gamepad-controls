@@ -125,7 +125,6 @@ statemachine class W3PlayerWitcher extends CR4Player
 	
 	
 	protected saved	var horseManagerHandle			: EntityHandle;		
-	
 
 	private var isInitialized : bool;
 	private var timeForPerk21 : float;
@@ -421,13 +420,13 @@ statemachine class W3PlayerWitcher extends CR4Player
 			
 
 			AddTimer('NGE_FixSkillPoints',1.0f,false);
-		}
+		}		
 		
 		
-		if( ((W3PlayerAbilityManager)abilityManager).GetToxicityOffset() > ((W3PlayerAbilityManager)abilityManager).GetStatMax(BCS_Toxicity)) 
-		{
-			((W3PlayerAbilityManager)abilityManager).SetToxicityOffset(0.f);
-		}
+		
+		ManageSetBonusesSoundbanks(EIST_Lynx);
+		ManageSetBonusesSoundbanks(EIST_Gryphon);
+		ManageSetBonusesSoundbanks(EIST_Bear);
 		
 
 		m_quenHitFxTTL = 0;
@@ -3123,8 +3122,16 @@ statemachine class W3PlayerWitcher extends CR4Player
 	timer function Mutation7CombatStartHackFixGo( dt : float, id : int )
 	{
 		var actors : array< CActor >;
-		
-		
+
+		if( IsMutationActive( EPMT_Mutation7 ) )
+		{
+			actors = GetEnemies();
+			
+			if( actors.Size() > 1 )
+			{		
+				AddEffectDefault( EET_Mutation7Buff, this, "Mutation 7, combat start" );			
+			}
+		}
 	}
 	
 	public final function IsInFistFight() : bool
@@ -5421,6 +5428,10 @@ statemachine class W3PlayerWitcher extends CR4Player
 		var i : int;
 		var equippedNewEdible : bool;
 		
+		var newEdibleId : int;
+		var isLevel1, isLevel2 : bool;
+		var abilities : array<name>;
+		
 		itemName = inv.GetItemName( itemId );
 		
 		if (itemName == 'q111_imlerith_acorn' ) 
@@ -5477,14 +5488,45 @@ statemachine class W3PlayerWitcher extends CR4Player
 				edibles = inv.GetItemsByTag('Edibles');
 				equippedNewEdible = false;
 				
+				newEdibleId = 0;
+				
 				
 				for(i=0; i<edibles.Size(); i+=1)
 				{
 					if(!IsItemEquipped(edibles[i]) && !inv.ItemHasTag(edibles[i], 'Alcohol') && inv.GetItemName(edibles[i]) != 'Clearing Potion' && inv.GetItemName(edibles[i]) != 'Wolf Hour')
 					{
-						EquipItemInGivenSlot(edibles[i], toSlot, true, false);
-						equippedNewEdible = true;
-						break;
+						abilities.Clear();
+						inv.GetItemAbilities(edibles[i], abilities);
+						if (abilities.Contains('FoodEdibleQuality_3') || abilities.Contains('BeverageQuality_3'))
+						{
+							equippedNewEdible = true;
+							newEdibleId = i;
+							break;
+						}
+						else if (!isLevel2)
+						{
+							if (abilities.Contains('FoodEdibleQuality_2') || abilities.Contains('BeverageQuality_2'))
+							{
+								isLevel2 = true;
+								isLevel1 = false;
+								equippedNewEdible = true;
+								newEdibleId = i;
+							}
+							else if (!isLevel1)
+							{
+								if (abilities.Contains('FoodEdibleQuality_1') || abilities.Contains('BeverageQuality_1'))
+								{
+									equippedNewEdible = true;
+									newEdibleId = i;
+									isLevel1 = true;
+								}
+								else 
+								{
+									equippedNewEdible = true;
+									newEdibleId = i;
+								}
+							}
+						}
 					}
 				}
 				
@@ -5500,6 +5542,8 @@ statemachine class W3PlayerWitcher extends CR4Player
 						}
 					}
 				}
+				else
+					EquipItemInGivenSlot(edibles[newEdibleId], toSlot, true, false);
 			}
 		}
 		
@@ -11931,6 +11975,124 @@ statemachine class W3PlayerWitcher extends CR4Player
 		
 		theGame.GetJournalManager().ForceUntrackingQuestForEP1Savegame();
 	}
+	
+	
+	private var radialPopupShown : bool;
+	
+	private function ToggleRadialMenuInput(enable : bool)
+	{
+		var hud    : CR4ScriptedHud;
+		var module : CR4HudModuleRadialMenu;
+		
+		hud = ( CR4ScriptedHud )theGame.GetHud();
+		
+		if ( hud )
+		{
+			module = (CR4HudModuleRadialMenu)hud.GetHudModule( "RadialMenuModule" );
+			if ( module )
+			{
+				module.DisableRadialMenuInput(!enable);
+			}
+		}
+	}
+	public function EnableRadialInput()
+	{
+		radialPopupShown = false;
+		AddTimer( 'EnableRadialMenuInput', 0.03f, false );
+	}
+	
+	timer function EnableRadialMenuInput( delta : float , id : int)
+	{
+		ToggleRadialMenuInput(true);
+	}
+	
+	timer function DrinkRadialPotionUpper( delta : float , id : int)
+	{
+		OnPotionDrinkInput(true);
+		GetInputHandler().SetRadialPotionUpperTimer(false);
+	}
+	
+	timer function DrinkRadialPotionLower( delta : float , id : int)
+	{
+		OnPotionDrinkInput(false);
+		GetInputHandler().SetRadialPotionLowerTimer(false);
+	}
+	
+	public function GetRadialPopupShown() : bool
+	{
+		return radialPopupShown;
+	}
+
+	public function PotionSelectionPopup( selectionMode : EItemSelectionPopupMode )
+	{
+		var cat : array<name>;
+		var m_popupData : W3ItemSelectionPopupData;
+	
+		m_popupData = new W3ItemSelectionPopupData in theGame.GetGuiManager();
+		m_popupData.targetInventory = thePlayer.GetInventory();
+		m_popupData.overrideQuestItemRestrictions = true;
+
+		m_popupData.selectionMode = selectionMode;
+		
+		cat.PushBack('potion');
+		cat.PushBack('edibles');
+		m_popupData.categoryFilterList = cat;
+		
+		theGame.RequestPopup('ItemSelectionPopup', m_popupData);
+		
+		ToggleRadialMenuInput(false);
+		radialPopupShown = true;
+	}
+	
+	public function OilSelectionPopup( steel : bool )
+	{
+		var cat, tags : array<name>;
+		var m_popupData : W3ItemSelectionPopupData;
+	
+		m_popupData = new W3ItemSelectionPopupData in theGame.GetGuiManager();
+		m_popupData.targetInventory = thePlayer.GetInventory();
+		m_popupData.overrideQuestItemRestrictions = true;
+		
+		if(steel)
+		{
+			tags.PushBack('SteelOil');
+			m_popupData.selectionMode = EISPM_RadialMenuSteelOil;
+		}
+		else
+		{
+			tags.PushBack('SilverOil');
+			m_popupData.selectionMode = EISPM_RadialMenuSilverOil;
+		}
+		m_popupData.filterTagsList = tags;		
+		
+		cat.PushBack('oil');
+		m_popupData.categoryFilterList = cat;
+		
+		theGame.RequestPopup('ItemSelectionPopup', m_popupData);
+		
+		ToggleRadialMenuInput(false);
+		radialPopupShown = true;
+	}
+	
+	private function CheckRadialMenu() : bool
+	{
+		var hud    : CR4ScriptedHud;
+		var module : CR4HudModuleRadialMenu;
+		
+		hud = ( CR4ScriptedHud )theGame.GetHud();
+		
+		if ( hud )
+		{
+			module = (CR4HudModuleRadialMenu)hud.GetHudModule( "RadialMenuModule" );
+			if ( module )
+			{				
+				return module.IsRadialMenuOpened();
+			}
+		}
+		
+		return false;
+	}
+	
 }
 
 exec function fuqfep1()
