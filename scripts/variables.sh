@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # game paths (change to your path if you are a developer who cloned this repo. don't commit changes)
-GAME_PATH="G:/GOG/The Witcher 3 Wild Hunt GOTY"
+GAME_PATH="D:/programs/steam/steamapps/common/The Witcher 3"
 BIN_FOLDER_NAME="x64"
-W3_USER_SETTINGS_PATH="C:/Users/amsun/Documents/The Witcher 3"
+W3_USER_SETTINGS_PATH="C:/Users/Adam/Documents/The Witcher 3"
 
 # mod vars
 NEXUS_MOD_ID=7475

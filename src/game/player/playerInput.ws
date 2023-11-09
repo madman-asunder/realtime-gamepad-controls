@@ -78,6 +78,17 @@ class CPlayerInput
 		theInput.RegisterListener( this, 'OnCommDrinkpotionLowerHeld', 'DrinkPotionLowerHold' );
 		
 		
+		theInput.RegisterListener( this, 'OnDrinkPotionHold', 'DrinkPotion1Hold' );
+		theInput.RegisterListener( this, 'OnDrinkPotionHold', 'DrinkPotion2Hold' );
+		theInput.RegisterListener( this, 'OnDrinkPotionHold', 'DrinkPotion3Hold' );
+		theInput.RegisterListener( this, 'OnDrinkPotionHold', 'DrinkPotion4Hold' );
+		theInput.RegisterListener( this, 'OnApplyOil', 'OilSteel' );
+		theInput.RegisterListener( this, 'OnApplyOil', 'OilSteelKB' );
+		theInput.RegisterListener( this, 'OnApplyOil', 'OilSilver' );
+		theInput.RegisterListener( this, 'OnApplyOil', 'OilSilverKB' );		
+		
+		
+		
 		theInput.RegisterListener( this, 'OnCommSteelSword', 'SteelSword' );
 		theInput.RegisterListener( this, 'OnCommSilverSword', 'SilverSword' );
 		theInput.RegisterListener( this, 'OnCommSheatheAny', 'SwordSheathe' );
@@ -1321,6 +1332,14 @@ class CPlayerInput
 		if(thePlayer.IsCiri())
 			return false;
 			
+		
+		if(CheckRadialMenu())
+		{
+			GetWitcherPlayer().RemoveTimer('DrinkRadialPotionUpper');
+			radialPotionUpperTimer = false;
+		}
+		
+			
 		if(IsReleased(action))
 			return false;
 		
@@ -1336,6 +1355,14 @@ class CPlayerInput
 		
 		if(thePlayer.IsCiri())
 			return false;
+			
+		
+		if(CheckRadialMenu())
+		{
+			GetWitcherPlayer().RemoveTimer('DrinkRadialPotionLower');
+			radialPotionLowerTimer = false;
+		}
+		
 			
 		if(IsReleased(action))
 			return false;
@@ -1353,11 +1380,57 @@ class CPlayerInput
 	{
 		var witcher : W3PlayerWitcher;
 		
+		
+		witcher = GetWitcherPlayer();
+		if(CheckRadialMenu())
+		{		
+			if( IsPressed(action) && !witcher.GetRadialPopupShown() )
+			{
+				if(upperSlot)
+				{
+					if(radialPotionUpperTimer)
+					{
+						if(witcher.GetSelectedPotionSlotUpper() == EES_Potion1)
+							witcher.PotionSelectionPopup( EISPM_RadialMenuSlot1 );
+						else
+							witcher.PotionSelectionPopup( EISPM_RadialMenuSlot3 );
+						witcher.RemoveTimer('DrinkRadialPotionUpper');
+						radialPotionUpperTimer = false;
+						return false;
+					}
+					
+					witcher.AddTimer('DrinkRadialPotionUpper', 0.035f, false);
+					radialPotionUpperTimer = true;
+				}
+				else
+				{
+					if(radialPotionLowerTimer)
+					{
+						if(witcher.GetSelectedPotionSlotLower() == EES_Potion2)
+							witcher.PotionSelectionPopup( EISPM_RadialMenuSlot2 );
+						else
+							witcher.PotionSelectionPopup( EISPM_RadialMenuSlot4 );
+						witcher.RemoveTimer('DrinkRadialPotionLower');
+						radialPotionLowerTimer = false;
+						return false;
+					}
+					
+					witcher.AddTimer('DrinkRadialPotionLower', 0.035f, false);
+					radialPotionLowerTimer = true;
+				}
+			}
+			
+			potionUpperHeld = false;
+			potionLowerHeld = false;
+			return false;
+		}
+		
+		
 		if ( potionModeHold && IsReleased(action) )
 		{
 			if(!potionUpperHeld && !potionLowerHeld)
 			{
-				GetWitcherPlayer().OnPotionDrinkInput(upperSlot);
+				witcher.OnPotionDrinkInput(upperSlot);
 			}
 			
 			if(upperSlot)
@@ -1367,7 +1440,6 @@ class CPlayerInput
 		}		
 		else if(!potionModeHold && IsPressed(action))
 		{
-			witcher = GetWitcherPlayer();
 			if(!witcher.IsPotionDoubleTapRunning())
 			{
 				witcher.SetPotionDoubleTapRunning(true, upperSlot);
@@ -1382,7 +1454,88 @@ class CPlayerInput
 		}
 		
 		return false;
-	}	
+	}		
+	
+	
+	private var radialPotionUpperTimer, radialPotionLowerTimer : bool;
+	public function SetRadialPotionUpperTimer(set:bool){radialPotionUpperTimer = set;}
+	public function SetRadialPotionLowerTimer(set:bool){radialPotionLowerTimer = set;}
+	
+	private function CheckRadialMenu() : bool
+	{
+		var hud    : CR4ScriptedHud;
+		var module : CR4HudModuleRadialMenu;
+		
+		hud = ( CR4ScriptedHud )theGame.GetHud();
+		
+		if ( hud )
+		{
+			module = (CR4HudModuleRadialMenu)hud.GetHudModule( "RadialMenuModule" );
+			if ( module )
+			{				
+				return module.IsRadialMenuOpened();
+			}
+		}
+		
+		return false;
+	}
+	
+	event OnDrinkPotionHold( action : SInputAction )
+	{
+		if(thePlayer.IsCiri())
+			return false;
+		
+		if(CheckRadialMenu())
+		{
+			if( IsPressed(action) )
+			{
+				switch( action.aName )
+				{
+					case 'DrinkPotion1Hold' :
+						GetWitcherPlayer().PotionSelectionPopup( EISPM_RadialMenuSlot1 );
+						break;
+					case 'DrinkPotion2Hold' :
+						GetWitcherPlayer().PotionSelectionPopup( EISPM_RadialMenuSlot2 );
+						break;
+					case 'DrinkPotion3Hold' :
+						GetWitcherPlayer().PotionSelectionPopup( EISPM_RadialMenuSlot3 );
+						break;
+					case 'DrinkPotion4Hold' :
+						GetWitcherPlayer().PotionSelectionPopup( EISPM_RadialMenuSlot4 );
+						break;
+					default :
+						break;
+				}
+			}
+		}
+	}
+	
+	event OnApplyOil( action : SInputAction )
+	{
+		if(thePlayer.IsCiri())
+			return false;
+		
+		if(CheckRadialMenu())
+		{
+			if( IsPressed(action) )
+			{
+				switch( action.aName )
+				{
+					case 'OilSteel' :
+					case 'OilSteelKB' :
+						GetWitcherPlayer().OilSelectionPopup( true );
+						break;
+					case 'OilSilver' :
+					case 'OilSilverKB' :
+						GetWitcherPlayer().OilSelectionPopup( false );
+						break;
+					default :
+						break;
+				}
+			}
+		}
+	}
+	
 	
 	
 	event OnCommDrinkPotion1( action : SInputAction )
@@ -1396,6 +1549,11 @@ class CPlayerInput
 			thePlayer.DisplayActionDisallowedHudMessage(EIAB_QuickSlots);
 			return false;
 		}
+		
+		
+		if( CheckRadialMenu() && GetWitcherPlayer().GetRadialPopupShown() )
+			return false;
+		
 		
 		if ( theInput.LastUsedGamepad() )
 		{
@@ -1426,6 +1584,11 @@ class CPlayerInput
 			return false;
 		}
 		
+		
+		if( CheckRadialMenu() && GetWitcherPlayer().GetRadialPopupShown() )
+			return false;
+		
+		
 		if ( theInput.LastUsedGamepad() )
 		{
 			return DrinkPotion(action, false);
@@ -1453,6 +1616,11 @@ class CPlayerInput
 			return false;
 		}
 		
+		
+		if( CheckRadialMenu() && GetWitcherPlayer().GetRadialPopupShown() )
+			return false;
+		
+		
 		if ( IsReleased(action) )
 		{
 			GetWitcherPlayer().OnPotionDrinkKeyboardsInput(EES_Potion3);
@@ -1476,6 +1644,11 @@ class CPlayerInput
 			thePlayer.DisplayActionDisallowedHudMessage(EIAB_QuickSlots);
 			return false;
 		}
+		
+		
+		if( CheckRadialMenu() && GetWitcherPlayer().GetRadialPopupShown() )
+			return false;
+		
 		
 		if ( IsReleased(action) )
 		{
@@ -1622,7 +1795,7 @@ class CPlayerInput
 		
 		if(!thePlayer.IsCiri())
 		{
-			if(altSignCasting && !theInput.LastUsedPCInput() && theInput.IsActionPressed('CastSign'))
+			if(altSignCasting && !theInput.LastUsedPCInput() && theInput.IsActionPressed('CastSign') && !GetWitcherPlayer().IsCurrentSignChanneled())
 			{
 				if(IsPressed( action ))
 				{
@@ -1752,7 +1925,7 @@ class CPlayerInput
 		if( IsPressed(action) )
 		{
 			
-			if(altSignCasting && !theInput.LastUsedPCInput() && theInput.IsActionPressed('CastSign'))
+			if(altSignCasting && !theInput.LastUsedPCInput() && theInput.IsActionPressed('CastSign') && !GetWitcherPlayer().IsCurrentSignChanneled())
 			{
 				AltCastSign(ST_Axii);
 				return false;
@@ -1806,7 +1979,7 @@ class CPlayerInput
 		if ( thePlayer.GetBIsInputAllowed() )
 		{
 			
-			if(altSignCasting && !theInput.LastUsedPCInput() && theInput.IsActionPressed('CastSign'))
+			if(altSignCasting && !theInput.LastUsedPCInput() && theInput.IsActionPressed('CastSign') && !GetWitcherPlayer().IsCurrentSignChanneled())
 			{
 				if(IsPressed( action ))
 				{
@@ -2343,7 +2516,7 @@ class CPlayerInput
 		
 		if(altSignCasting && !theInput.LastUsedPCInput())
 		{
-			if(IsPressed( action ) && (theInput.GetActionValue( 'LockAndGuard' ) > 0)) 
+			if(IsPressed( action ) && (theInput.GetActionValue( 'LockAndGuard' ) > 0) && !GetWitcherPlayer().IsCurrentSignChanneled()) 
 			{
 				AltCastSign(ST_Igni);
 			}
@@ -2827,7 +3000,7 @@ class CPlayerInput
 		if( IsPressed(action) )
 		{
 			
-			if(altSignCasting && !theInput.LastUsedPCInput() && theInput.IsActionPressed('CastSign'))
+			if(altSignCasting && !theInput.LastUsedPCInput() && theInput.IsActionPressed('CastSign') && !GetWitcherPlayer().IsCurrentSignChanneled())
 			{
 				AltCastSign(ST_Igni);
 				return false;
@@ -3200,7 +3373,8 @@ class CPlayerInput
 		if( IsReleased(action) 
 			&& openedPanel != 'GlossaryTutorialsMenu' 
 			&& !theGame.GetGuiManager().IsAnyMenu() 
-			&& !theGame.IsBlackscreenOrFading() ) 
+			&& !theGame.IsBlackscreenOrFading() 
+			&& FactsQuerySum("nge_pause_menu_disabled") <= 0 ) 
 		{
 			theGame.SetMenuToOpen( '' );
 			theGame.RequestMenu('CommonIngameMenu' );

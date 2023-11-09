@@ -1688,6 +1688,8 @@ state CastSign in W3VehicleCombatManager
 		if( animEventName == 'cast_begin' )
 		{
 			witcher.ProcessSignEvent( 'horse_cast_begin' );
+			
+			
 			thePlayer.PlayBattleCry( 'ChillOutHorse', 0.45f, true, true );
 		}
 	}
@@ -2280,7 +2282,7 @@ state ShootCrossbow in W3VehicleCombatManager extends RangedAttack
 		
 		thePlayer.UnblockAction( EIAB_DismountVehicle, 'ShootingCrossbow' );	
 		thePlayer.UnblockAction( EIAB_MountVehicle, 'ShootingCrossbow' );
-
+		
 		parent.PopState( true );
 	}
 	
