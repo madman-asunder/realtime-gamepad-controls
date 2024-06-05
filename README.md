@@ -2,7 +2,7 @@
 
 **Author**: Adam Sunderman (*AKA: Madman Asunder*)  
 [**Official Nexus Mod Page**](https://www.nexusmods.com/witcher3/mods/7475/)  
-[**Video Demo**](https://www.youtube.com/watch?v=iSoYiggjnXU)  
+[**Video Demo**]([https://www.youtube.com/watch?v=iSoYiggjnXU](https://dai.ly/k3y4Z23WfVofmxANnQA))  
 [**Github**](https://github.com/madman-asunder/realtime-gamepad-controls)
 
 [**Immersive Motion**](https://www.nexusmods.com/witcher3/mods/1933) Credit: [ksoldberg](https://www.nexusmods.com/witcher3/users/1977596)  
@@ -96,7 +96,7 @@ You are ready to never need to open that lame radial menu again **:D**
 
 #### Alternatively,
 
-[**Intall Walkthrough**](https://www.youtube.com/watch?v=u_rfXecinzE)  
+[**Intall Walkthrough**]([https://www.youtube.com/watch?v=u_rfXecinzE](https://dai.ly/kilLjsQhRRTUYDANnQC))  
 
 For an easier installation, I can almost fully recommend installation with [Witcher 3 Mod Manager](https://rd.nexusmods.com/witcher3/mods/2678) by 
 [stefan3372](https://rd.nexusmods.com/witcher3/users/42512255). It has proven very successful at installing in my testing. However, as it is 
@@ -104,13 +104,6 @@ helping you bind keys (which it will do automatically) it will notice duplicate 
 repeatedly. If you don't save all bindings for this action, you will not be able to alternate cast all 5 signs. Another consideration is on 
 uninstall with Witcher 3 Mod Manager, I have noticed that keybindings stay in the input settings. Not a big deal immediately, but having those 
 left over for future installs could lead to future issues.
-
-##### *IMPORTANT*
-
-The Witcher 3 Mod Manager IS NOT fully next gen compatible. I have submitted a PR to make it so: 
-[PR](https://github.com/Systemcluster/The-Witcher-3-Mod-manager/pull/33).However, the authors have moved on. I'm going to give it some time 
-before hosting a full fork, but in the meantime you can use a preview build that I made to install it automatically (next gen compatible) from:
-[W3MM Mod Manager - Next Gen Preview](https://drive.google.com/file/d/1sOmHplCVv3RuMN2EgJye7dyJ9FsiS0dF/view?usp=share_link)
 
 ## Features
 1. Instant Sign Casting via "Sign/QuickSelect" Modifier Button
@@ -128,7 +121,7 @@ before hosting a full fork, but in the meantime you can use a preview build that
 
 ## Uninstall Instructions
 
-[**Uninstall Walkthrough**](https://www.youtube.com/watch?v=uCjNbiMype4)  
+[**Uninstall Walkthrough**](https://dai.ly/kEXPGEkUToHDmVANnQE)  
 
 On the [Mod Page](https://www.nexusmods.com/witcher3/mods/7475/) download the optional file `Uninstallation Save Fixer`. This file contains
 a mod `modForceResetInput` that simply adds one line to `player.ws` that resets the Input Handler on spawn. Once you have fixed all the saves
