@@ -2,7 +2,7 @@
 
 **Author**: Adam Sunderman (*AKA: Madman Asunder*)  
 [**Official Nexus Mod Page**](https://www.nexusmods.com/witcher3/mods/7475/)  
-[**Video Demo**]([https://www.youtube.com/watch?v=iSoYiggjnXU](https://dai.ly/k3y4Z23WfVofmxANnQA))  
+[**Video Demo**](https://dai.ly/k3y4Z23WfVofmxANnQA)  
 [**Github**](https://github.com/madman-asunder/realtime-gamepad-controls)
 
 [**Immersive Motion**](https://www.nexusmods.com/witcher3/mods/1933) Credit: [ksoldberg](https://www.nexusmods.com/witcher3/users/1977596)  
@@ -96,7 +96,7 @@ You are ready to never need to open that lame radial menu again **:D**
 
 #### Alternatively,
 
-[**Intall Walkthrough**]([https://www.youtube.com/watch?v=u_rfXecinzE](https://dai.ly/kilLjsQhRRTUYDANnQC))  
+[**Intall Walkthrough**](https://dai.ly/kilLjsQhRRTUYDANnQC)  
 
 For an easier installation, I can almost fully recommend installation with [Witcher 3 Mod Manager](https://rd.nexusmods.com/witcher3/mods/2678) by 
 [stefan3372](https://rd.nexusmods.com/witcher3/users/42512255). It has proven very successful at installing in my testing. However, as it is 
