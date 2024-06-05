@@ -1,6 +1,6 @@
 # **Realtime Gamepad Controls (*Next Gen*)**
 
-**Author**: Adam Sunderman (*AKA: Madman Asunder*)  
+**Author**: Madman Asunder 
 [**Official Nexus Mod Page**](https://www.nexusmods.com/witcher3/mods/7475/)  
 [**Video Demo**](https://dai.ly/k3y4Z23WfVofmxANnQA)  
 [**Github**](https://github.com/madman-asunder/realtime-gamepad-controls)
