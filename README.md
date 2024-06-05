@@ -3,7 +3,7 @@
 **Author**: Adam Sunderman (*AKA: Madman Asunder*)  
 [**Official Nexus Mod Page**](https://www.nexusmods.com/witcher3/mods/7475/)  
 [**Video Demo**](https://www.youtube.com/watch?v=iSoYiggjnXU)  
-[**Github**](https://github.com/adam-sunderman/realtime-gamepad-controls)
+[**Github**](https://github.com/madman-asunder/realtime-gamepad-controls)
 
 [**Immersive Motion**](https://www.nexusmods.com/witcher3/mods/1933) Credit: [ksoldberg](https://www.nexusmods.com/witcher3/users/1977596)  
 [**Better Torches**](https://www.nexusmods.com/witcher3/mods/1990) Credit: [Syynx](https://www.nexusmods.com/witcher3/users/19327684)   
